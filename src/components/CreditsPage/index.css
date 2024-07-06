@@ -1,0 +1,152 @@
+.credits-bottom-section {
+    display: flex;
+    justify-content: space-around;
+    padding: 0px;
+    padding-left: 20px;
+  }
+  .credit-history-logo {
+    font-size: 15px;
+    padding-right: 6px;
+    margin-top: 0px;
+    background-color: none;
+    background: transparent;
+  }
+  .available-credits-container {
+    display: flex;
+    margin: 20px;
+    flex-direction: column;
+  }
+  .available-credits-card {
+    padding: 20px;
+    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1); 
+    border-radius: 6px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    background: linear-gradient(to bottom right, #35766a79, #e6f4a0b6); /* Light gradient background */
+  }
+  .credits-history-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+  }
+  
+  .credits-main-heading {
+    font-size: 20px;
+    margin-bottom: 0px;
+  }
+  .credits-para {
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 0px;
+  }
+  .credits-whatsapp-logo {
+    color: #26C943;
+  }
+  .make-payment-button {
+    border: none;
+    padding: 8px;
+    background-color: rgb(5, 147, 255);
+    color: white;
+    border-radius: 5px;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+  .talk-button {
+    background-color: #26C943;
+    border: none;
+    display: flex;
+    align-items: center;
+    padding-right: 20px;
+    padding-left: 20px;
+    border-radius: 12px;
+    padding: 6px;
+    color: white;
+    font-size: 15px;
+    width: 140px;
+  }
+  
+  .note-text{
+    color: red;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic;
+  }
+  .payment-note {
+     font-style: italic;
+     font-size: 12px; 
+  }
+  
+  .whatsapp-logo {
+    height: 32px;
+    width: 32px;
+    margin-left: 8px;
+    margin-right: 6px;
+    border-radius: 50%;
+  }
+  .credit-table-container {
+    padding: 20px;
+  }
+  
+  .credit-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .credit-table-header {
+    background-color: lightblue;
+    color: black;
+  }
+  
+  .credit-table-header-cell {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .credit-table-row {
+    border: 1px solid black;
+  }
+  
+  .credit-table-cell {
+    border: 1px solid black;
+    text-align: center;
+    padding: 10px;
+  }
+  .paymentTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-right: 60px;
+  }
+  
+  .paymentHeader__cell {
+    background-color: rgb(27, 124, 184);
+    border: 1px solid black;
+    color: white;
+    padding:10px;
+    text-align: center;
+  }
+  
+  .paymentRow:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .paymentCell {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .paymentCell input {
+    margin: 0;
+    cursor: pointer;
+  }
+  
+  .paymentTotalRow {
+    font-weight: bold;
+    background-color: #f9f9f9;
+  }

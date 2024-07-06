@@ -1,38 +1,80 @@
-.App {
-  text-align: center;
+/* Container for the entire app layout */
+.app-container {
+    display: flex;
+    height: 100vh; /* Full viewport height */
+    width: 100vw; /* Full viewport width */
+    overflow: hidden; /* Prevent overflow */
+    position: relative; /* Ensure relative positioning */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Main content styling */
+.main-content {
+    flex-grow: 1; /* Grow to fill available space */
+    overflow-y: auto; /* Enable vertical scrolling */
+    display: flex;
+    flex-direction: column;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Top section styling */
+.institute-top-section {
+    width: 100%; /* Full width */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0F4A8A;
+    color: white;
+    padding: 5px 20px; /* Padding for spacing */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow */
+    z-index: 1000; /* On top of other elements */
+    position: fixed; /* Fixed position */
+    top: 0; /* Align to the top */
+    height: 40px; /* Fixed height */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* Content with and without the top section */
+.main-content.no-top-section {
+    padding-top: 0; /* No top padding */
 }
 
-.App-link {
-  color: #61dafb;
+.main-content.with-top-section {
+    padding-top: 40px; /* Padding to account for fixed top section height */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Sidebar styling */
+.sidebar {
+    width: 20vw; /* Fixed width */
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1); /* Box shadow */
+    background-color: #ffecec6d; /* Light background color */
+    padding-top: 30px;
+    overflow-y: auto; /* Enable vertical scrolling */
+    position: fixed; /* Fixed position */
+    top: 40px; /* Align below the top section */
+    left: 0; /* Align to the left */
+    height: calc(100vh - 40px); /* Adjust height based on top section */
+}
+
+/* Main content area to the right of the sidebar */
+.main-content.with-sidebar {
+    margin-left: 20vw; /* Offset content to the right of the sidebar */
+}
+
+/* MarketingData content */
+.marketing-data {
+    flex-grow: 1; /* Grow to fill available space */
+    overflow-y: auto; /* Enable vertical scrolling if needed */
+    padding: 20px; /* Padding for content */
+    margin-left: 20vw; /* Ensure content starts after sidebar */
+}
+
+/* Top section text styling */
+.institute-top-right-text,
+.institute-top-left-text {
+    font-size: 20px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+}
+
+/* Margin adjustments for right text */
+.institute-top-left-text {
+    margin-right: 25px; /* Margin for spacing */
 }

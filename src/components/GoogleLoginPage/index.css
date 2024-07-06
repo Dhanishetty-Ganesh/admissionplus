@@ -1,0 +1,23 @@
+.google-login-page-main-container {
+    background-color: lightblue;
+    height: 100vh;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.google-login-page-main-heading {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.google-login-page-button {
+    border: 0px none;
+    border-radius: 6px;
+    padding: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+  
+  .google-login-page-button:hover {
+    background-color: #357ae8;
+  }
