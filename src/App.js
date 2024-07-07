@@ -3,9 +3,10 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import GoogleLoginPage from './components/GoogleLoginPage';
 import DashboardPage from './components/DashboardPage';
 import CreditsPage from './components/CreditsPage';
-import MarketingData from './components/MarketingData'; // Import MarketingData component
+import MarketingData from './components/MarketingData';
 import Marketing from './components/Marketing';
 import AudioClips from './components/AudioClips';
+import InstituteRoute from './components/DashboardRoutes/InsituteRoute';
 import InstituteContainer from './components/InstituteContainer';
 import StudentsDatabaseGroupName from './components/StudentsDatabaseGroupName';
 import StudentsDatabase from './components/StudentsDatabase';
@@ -16,7 +17,7 @@ const AppContent = () => {
   const location = useLocation();
 
   // Determine if the sidebar should be shown and fixed
-  const fixedSidebar = ['/students', '/credits', '/marketing', '/institutecontainer', '/audioclips', '/marketing/:marketingname','studentsdatabase/groupname/:groupname'].includes(location.pathname);
+  const fixedSidebar = ['/students', '/credits', '/marketing', '/institutecontainer', '/audioclips', '/marketing/:marketingname', '/studentsdatabase/groupname/:groupname'].includes(location.pathname);
   const showSidebar = !['/dashboardpage', '/'].includes(location.pathname);
   const showTopSection = !['/dashboardpage', '/'].includes(location.pathname);
 
@@ -31,15 +32,16 @@ const AppContent = () => {
       {showSidebar && <Sidebar />}
       <div className={`main-content ${showTopSection ? 'with-top-section' : 'no-top-section'} ${fixedSidebar ? 'shrinked' : ''} ${showSidebar ? 'with-sidebar' : ''}`}>
         <Routes>
-          <Route path="/" element={<GoogleLoginPage />} />
-          <Route path="/dashboardpage" element={<DashboardPage />} />
-          <Route path="/credits" element={<CreditsPage />} />
-          <Route path="/audioclips" element={<AudioClips />} />
-          <Route path="/marketing" element={<Marketing />} />
-          <Route path="/students" element={<StudentsDatabase />} />
-          <Route path="/studentsdatabase/groupname/:groupname" element={<StudentsDatabaseGroupName />} />
-          <Route path="/marketing/:marketingname" element={<MarketingData />} /> {/* Ensure MarketingData route */}
-          <Route path="/institutecontainer" element={<InstituteContainer />} />
+          <Route exact path="/" element={<GoogleLoginPage />} />
+          <Route exact path="/dashboardpage" element={<DashboardPage />} />
+          <Route exact path="/credits" element={<CreditsPage />} />
+          <Route exact path="/audioclips" element={<AudioClips />} />
+          <Route exact path="/marketing" element={<Marketing />} />
+          <Route exact path="/students" element={<StudentsDatabase />} />
+          <Route exact path="/studentsdatabase/groupname/:groupname" element={<StudentsDatabaseGroupName />} />
+          <Route exact path="/marketing/:marketingname" element={<MarketingData />} />
+          <Route exact path="/institutecontainer" element={<InstituteContainer />} />
+          <Route exact path="/random" element={<InstituteRoute />} />
         </Routes>
       </div>
     </div>

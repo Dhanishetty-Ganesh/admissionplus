@@ -1,0 +1,28 @@
+/* InstituteRoute.css */
+.institute-route-container {
+    display: flex;
+    height: 100vh; /* Full viewport height */
+  }
+  
+  .dashboard-wrapper {
+    flex: 1; /* Take up available space */
+    max-width: 300px; /* Adjust based on your sidebar width */
+    box-sizing: border-box; /* Include padding/border in element's total width */
+  }
+  
+  .right-side-content {
+    flex: 3; /* Take up remaining space */
+    padding: 20px; /* Add some padding for better spacing */
+    background-color: #f9f9f9; /* Light background color */
+    box-sizing: border-box; /* Include padding/border in element's total width */
+    overflow-y: auto; /* Allow scrolling if content overflows */
+  }
+  
+  .right-side-content h2 {
+    margin-top: 0; /* Remove top margin for first heading */
+  }
+  
+  .right-side-content p {
+    font-size: 16px; /* Adjust based on your text size preferences */
+  }
+  

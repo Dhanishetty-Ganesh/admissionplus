@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
-import { FaPlus} from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaPlus, FaUniversity, FaBullhorn, FaChartLine, FaFileInvoiceDollar, FaQuestionCircle, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import { FaLocationDot } from "react-icons/fa6";
 import './index.css'; 
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const DashboardPage = () => {
+  const location = useLocation();
+  const profilename = location.state?.name || '';
+
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [businesses, setBusinesses] = useState([]);
   const [formData, setFormData] = useState({
@@ -16,8 +20,23 @@ const DashboardPage = () => {
     location: '',
     city: '',
     district: '',
-    pincode: ''
+    pincode: '',
   });
+
+  // Fetch data when the component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://admissionplusbackend.vercel.app/institutes');
+        if (response.data && Array.isArray(response.data.result)) {
+          setBusinesses(response.data.result);
+        }
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -35,21 +54,28 @@ const DashboardPage = () => {
     }));
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setBusinesses((prevBusinesses) => [...prevBusinesses, formData]);
-    setIsFormVisible(false);
-    setFormData({
-      logo: '',
-      name: '',
-      mobile: '',
-      role: '',
-      email: '',
-      location: '',
-      city: '',
-      district: '',
-      pincode: ''
-    });
+    try {
+      const response = await axios.post('https://admissionplusbackend.vercel.app/institutes', formData);
+      if (response.data && response.data.result) {
+        setBusinesses((prevBusinesses) => [...prevBusinesses, response.data.result]);
+      }
+      setIsFormVisible(false);
+      setFormData({
+        logo: '',
+        name: '',
+        mobile: '',
+        role: '',
+        email: '',
+        location: '',
+        city: '',
+        district: '',
+        pincode: '',
+      });
+    } catch (err) {
+      console.error('Error submitting form:', err);
+    }
   };
 
   const handleFormClose = () => {
@@ -60,21 +86,27 @@ const DashboardPage = () => {
     <div className='dashboard-container'>
       <div className='dashboard-top-section'>
         <h1 className='dashboard-top-right-text'>AdmissionPlus</h1>
-        <h1 className='dashboard-top-left-text'>Help</h1>
+        <div className='dashboard-email-help'>
+          <h1 className='dashboard-top-left-text'><p className='dashboard-email'>{profilename}</p></h1>
+        </div>
       </div>
       <div className='bottom-containers'>
         <div className='left-section'>
-          <h1 className='left-side-button'>Institute</h1>
-          <h1 className='left-side-button'>Plans</h1>
-          <h1 className='left-side-button'>Sale</h1>
-          <h1 className='left-side-button'>Account</h1>
-          <h1 className='left-side-button'>Settings</h1>
+          <Link to="/dashboardinstitute" className='left-side-button'><FaUniversity className='icon' /> Institute</Link>
+          <Link to="/dashboardplan" className='left-side-button'><FaFileInvoiceDollar className='icon' /> Plans</Link>
+          <Link to="/dashboardmarketing" className='left-side-button'><FaBullhorn className='icon' /> Marketing</Link>
+          <Link to="/dashboardsale" className='left-side-button'><FaChartLine className='icon' /> Sale</Link>
+          <div className='bottom-buttons'>
+            <Link to="/help" className='left-side-button'><FaQuestionCircle className='icon' /> Help</Link>
+            <Link to="/settings" className='left-side-button'><FaCog className='icon' /> Settings</Link>
+            <Link to="/logout" className='left-side-button'><FaSignOutAlt className='icon' /> Logout</Link>
+          </div>
         </div>
         <div className='right-section'>
           <ul className='business-list-items-container'>
             {businesses.map((business, index) => (
               <li className='business-list-item' key={index}>
-                {business.logo && <img src={business.logo} alt="logo" className='business-logo'/>}
+                {business.logo && <img src={business.logo} alt="logo" className='business-logo' />}
                 <div>
                   <p className='business-name'>{business.name}</p>
                   <p className='business-mobile-no'>{business.mobile}</p>
@@ -83,8 +115,8 @@ const DashboardPage = () => {
                   <p className='business-role'>{business.role}</p>
                   <p className='business-email'>{business.email}</p>
                 </div>
-                <p className='business-location'><FaLocationDot className='location-logo'/>{business.location}</p>
-                <Link className='business-login-button' to = "/institutecontainer">Login</Link>
+                <p className='business-location'><FaLocationDot className='location-logo' />{business.location}</p>
+                <Link className='business-login-button' to="/institutecontainer">Login</Link>
               </li>
             ))}
           </ul>
