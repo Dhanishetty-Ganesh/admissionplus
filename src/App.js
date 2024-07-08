@@ -23,13 +23,13 @@ const AppContent = () => {
 
   return (
     <div className={`app-container ${fixedSidebar ? 'fixed-sidebar' : ''}`}>
-      {showTopSection && (
+      {/* {showTopSection && (
         <div className="institute-top-section">
           <h1 className='institute-top-right-text'>Pragati Institute of Computer</h1>
           <h1 className='institute-top-left-text'>Help</h1>
         </div>
-      )}
-      {showSidebar && <Sidebar />}
+      )} */}
+      {/* {showSidebar && <Sidebar />} */}
       <div className={`main-content ${showTopSection ? 'with-top-section' : 'no-top-section'} ${fixedSidebar ? 'shrinked' : ''} ${showSidebar ? 'with-sidebar' : ''}`}>
         <Routes>
           <Route exact path="/" element={<GoogleLoginPage />} />
