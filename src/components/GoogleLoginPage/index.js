@@ -12,7 +12,7 @@ const GoogleLoginPage = () => {
     const decodedToken = jwtDecode(credential); // Correct usage
     const name = decodedToken.name; // Extracting the name
 
-    navigate("/dashboardpage", { state: { name } });
+    navigate("/institutedashboard", { state: { name } });
   };
 
   const onError = () => {

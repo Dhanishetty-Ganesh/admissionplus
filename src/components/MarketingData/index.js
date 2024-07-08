@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa6';
 import { AiTwotoneEdit } from 'react-icons/ai';
+import Sidebar from '../Sidebar';
 import { MdDeleteOutline } from 'react-icons/md';
 import './index.css'; // Ensure you have corresponding CSS
 
@@ -97,6 +98,7 @@ const MarketingData = () => {
 
   return (
     <div className='marketingdata-container'>
+      <Sidebar/>
       <div className='marketingdata-top-container'>
         <h1 className='marketingdata-heading'>{marketingname}</h1>
         <div className='marketingdata-heading-container'>

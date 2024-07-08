@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import "./index.css";
 import { FaPlus } from "react-icons/fa6";
 import { AiTwotoneEdit } from "react-icons/ai";
+import Sidebar from '../Sidebar';
 import { MdDeleteOutline } from "react-icons/md";
 
 
@@ -94,6 +95,7 @@ const AudioClips = () => {
 
   return (
     <div className='audioclips-container'>
+      <Sidebar/>
       <div className='audioclips-top-container'>
         <h1 className='audioclips-heading'>Audio Clips</h1>
         <div className='audioclips-heading-container'>

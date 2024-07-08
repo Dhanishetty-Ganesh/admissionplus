@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaHistory } from 'react-icons/fa';
+import Sidebar from '../Sidebar';
 import "./index.css"
 
 const CreditsPage = () => {
@@ -51,6 +52,7 @@ const CreditsPage = () => {
 
   return (
     <div>
+      <Sidebar/>
       <div className='students-top-content'>
         <h1 className='students-heading'>Credits</h1>
         <div className='students-add-button-container'>

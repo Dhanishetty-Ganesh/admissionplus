@@ -1,0 +1,11 @@
+.plan-route-container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh; /* Full viewport height */
+    background-color: #f4f4f9; /* Light background color */
+   justify-content: center;
+   align-items: center;
+  }
+  .coming-soon-image {
+    height: 280px;
+  }

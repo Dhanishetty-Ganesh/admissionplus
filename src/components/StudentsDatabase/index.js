@@ -4,6 +4,7 @@ import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 import { FaPlus, FaTimes } from 'react-icons/fa'; // Add FaPlus and FaTimes imports
 import {Link} from "react-router-dom"
+import Sidebar from '../Sidebar';
 import "./index.css"
 
 
@@ -89,6 +90,7 @@ const StudentsDatabase = () => {
 
   return (
     <div className='database-content'>
+      <Sidebar/>
       <div className='students-top-content'>
         <h1 className='students-heading'>Students</h1>
         <div className='students-add-button-container'>

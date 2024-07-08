@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import GoogleLoginPage from './components/GoogleLoginPage';
 import DashboardPage from './components/DashboardPage';
 import CreditsPage from './components/CreditsPage';
+import PlansRoute from './components/DashboardRoutes/PlansRoute';
 import MarketingData from './components/MarketingData';
 import Marketing from './components/Marketing';
 import AudioClips from './components/AudioClips';
@@ -10,7 +11,8 @@ import InstituteRoute from './components/DashboardRoutes/InsituteRoute';
 import InstituteContainer from './components/InstituteContainer';
 import StudentsDatabaseGroupName from './components/StudentsDatabaseGroupName';
 import StudentsDatabase from './components/StudentsDatabase';
-import Sidebar from './components/Sidebar';
+import MarketingDashboard from './components/DashboardRoutes/MarketingDashboard';
+import SaleDashboard from './components/DashboardRoutes/SaleDashboard';
 import './App.css';
 
 const AppContent = () => {
@@ -23,17 +25,11 @@ const AppContent = () => {
 
   return (
     <div className={`app-container ${fixedSidebar ? 'fixed-sidebar' : ''}`}>
-      {/* {showTopSection && (
-        <div className="institute-top-section">
-          <h1 className='institute-top-right-text'>Pragati Institute of Computer</h1>
-          <h1 className='institute-top-left-text'>Help</h1>
-        </div>
-      )} */}
-      {/* {showSidebar && <Sidebar />} */}
+    
       <div className={`main-content ${showTopSection ? 'with-top-section' : 'no-top-section'} ${fixedSidebar ? 'shrinked' : ''} ${showSidebar ? 'with-sidebar' : ''}`}>
         <Routes>
           <Route exact path="/" element={<GoogleLoginPage />} />
-          <Route exact path="/dashboardpage" element={<DashboardPage />} />
+          {/* <Route exact path="/dashboardpage" element={<DashboardPage />} /> */}
           <Route exact path="/credits" element={<CreditsPage />} />
           <Route exact path="/audioclips" element={<AudioClips />} />
           <Route exact path="/marketing" element={<Marketing />} />
@@ -41,7 +37,10 @@ const AppContent = () => {
           <Route exact path="/studentsdatabase/groupname/:groupname" element={<StudentsDatabaseGroupName />} />
           <Route exact path="/marketing/:marketingname" element={<MarketingData />} />
           <Route exact path="/institutecontainer" element={<InstituteContainer />} />
-          <Route exact path="/random" element={<InstituteRoute />} />
+          <Route exact path="/plandashboard" element={<PlansRoute />} />
+          <Route exact path="/institutedashboard" element={<InstituteRoute />} />
+          <Route exact path="/marketingdashboard" element={<MarketingDashboard />} />
+          <Route exact path="/saledashboard" element={<SaleDashboard />} />
         </Routes>
       </div>
     </div>

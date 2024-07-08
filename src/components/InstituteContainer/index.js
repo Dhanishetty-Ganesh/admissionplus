@@ -1,6 +1,7 @@
 import React from 'react'
 import { IoMdDownload } from 'react-icons/io';
 import QRCode from 'qrcode.react';
+import Sidebar from '../Sidebar';
 import "./index.css"
 
 const InstituteContainer = () => {
@@ -16,6 +17,7 @@ const InstituteContainer = () => {
 
   return (
     <div className='institute-details-container'>
+              <Sidebar/>
               <div className='institute-details-card'>
                 <h1 className='institute-details-heading'>Institute Details</h1>
                 <img src="https://res.cloudinary.com/dvwnbhpcy/image/upload/v1720009868/WhatsApp_Image_2024-07-03_at_17.00.39_c1fce357_bqx6mt.jpg" alt="institute-logo" className='institute-logo-style' />

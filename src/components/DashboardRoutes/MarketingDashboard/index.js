@@ -1,8 +1,6 @@
 import React from 'react'
 import DashboardPage from '../../DashboardPage'
-import "./index.css"
-
-const PlansRoute = () => {
+export const MarketingDashboard = () => {
   return (
     <div className='plan-route-container'>
       <DashboardPage/>
@@ -10,5 +8,4 @@ const PlansRoute = () => {
     </div>
   )
 }
-
-export default PlansRoute
+export default MarketingDashboard

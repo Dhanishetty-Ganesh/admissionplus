@@ -47,3 +47,9 @@ margin-top: -120px;
 .google-login-page-button-container .react-oauth__google-btn:hover {
   background-color: #357ae8;
 }
+
+@media screen and (max-width:768px) {
+  .google-login-page-main-heading {
+    font-size: 14px;
+  }
+}

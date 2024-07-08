@@ -47,12 +47,12 @@
     background-color: #ffecec6d; /* Light background color */
     padding-top: 30px;
     overflow-y: auto; /* Enable vertical scrolling */
-    position: fixed; /* Fixed position */
-    top: 40px; /* Align below the top section */
-    left: 0; /* Align to the left */
-    height: calc(100vh - 40px); /* Adjust height based on top section */
-}
+    position: fixed;  
+     top: 40px; 
+     left: 0; 
+    height: calc(100vh - 40px); 
 
+}
 /* Main content area to the right of the sidebar */
 .main-content.with-sidebar {
     margin-left: 20vw; /* Offset content to the right of the sidebar */

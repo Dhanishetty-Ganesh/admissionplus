@@ -12,6 +12,10 @@ const Sidebar = () => {
 
   return (
     <div className='sidebar'>
+       <div className="institute-top-section">
+          <h1 className='institute-top-right-text'>Pragati Institute of Computer</h1>
+          <h1 className='institute-top-left-text'>Help</h1>
+        </div>
       <div className='institute-left-section'>
         {/* Institute Option */}
         <div className='left-options'>

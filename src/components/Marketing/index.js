@@ -4,6 +4,7 @@ import { FaPlus} from 'react-icons/fa6';
 import { AiTwotoneEdit } from 'react-icons/ai';
 import { MdDeleteOutline } from "react-icons/md";
 import { Link } from 'react-router-dom';
+import Sidebar from '../Sidebar';
 
 
 const Marketing = () => {
@@ -72,6 +73,7 @@ const Marketing = () => {
 
   return (
     <div className='marketingmain-content'>
+      <Sidebar/>
       <div className='marketingmain-top-container'>
         <h1 className='marketingmain-heading'>Marketing</h1>
         <div className='marketingmain-heading-container'>

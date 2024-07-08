@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa6';
 import { AiTwotoneEdit } from 'react-icons/ai';
+import Sidebar from '../Sidebar';
 import { MdDeleteOutline } from 'react-icons/md';
 import './index.css'; // Ensure you have corresponding CSS
 
@@ -93,6 +94,7 @@ const StudentsDatabaseGroupName = () => {
 
   return (
     <div className='studentsdatabasegroupname-container'>
+      <Sidebar/>
       <div className='studentsdatabasegroupname-top-container'>
         <h1 className='studentsdatabasegroupname-heading'>{groupname}</h1>
         <div className='studentsdatabasegroupname-heading-container'>
