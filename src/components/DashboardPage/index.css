@@ -6,7 +6,7 @@
 }
 
 .dashboard-top-section {
-    background-color: blue;
+    background-color: rgb(53, 85, 201);
     display: flex;
     color: white;
     align-items: center;
@@ -19,7 +19,7 @@
 .dashboard-top-right-text,
 .dashboard-top-left-text {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .bottom-containers {

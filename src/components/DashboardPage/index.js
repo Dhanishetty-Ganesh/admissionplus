@@ -4,6 +4,8 @@ import { FaLocationDot } from "react-icons/fa6";
 import './index.css'; 
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { FaUserCircle } from "react-icons/fa";
+
 
 const DashboardPage = () => {
   const location = useLocation();
@@ -87,7 +89,7 @@ const DashboardPage = () => {
       <div className='dashboard-top-section'>
         <h1 className='dashboard-top-right-text'>AdmissionPlus</h1>
         <div className='dashboard-email-help'>
-          <h1 className='dashboard-top-left-text'><p className='dashboard-email'>{profilename}</p></h1>
+          <h1 className='dashboard-top-left-text'><p className='dashboard-email'>{profilename} <FaUserCircle/></p></h1>
         </div>
       </div>
       <div className='bottom-containers'>
