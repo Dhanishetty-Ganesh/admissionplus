@@ -102,7 +102,7 @@ const InstituteRoute = () => {
               {businesses.map((business, index) => (
                 <li className='business-list-item' key={index}>
                   {business.logo ? (
-                    <img src={business.logo} alt="logo" className='business-logo' onError={(e) => e.target.style.display = 'none'} />
+                    <img src={business.logo} alt="logo" className='business-logo'/>
                   ) : (
                     <div className='business-logo-placeholder'>No Logo</div>
                   )}

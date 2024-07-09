@@ -8,7 +8,7 @@ import Sidebar from '../Sidebar';
 import "./index.css"
 
 
-const StudentsDatabase = () => {
+const RegistrationStudents = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -92,15 +92,13 @@ const StudentsDatabase = () => {
     <div className='database-content'>
       <Sidebar/>
       <div className='students-top-content'>
-        <h1 className='students-heading'>Database</h1>
+        <h1 className='students-heading'>Registrations</h1>
         <div className='students-add-button-container'>
-          <button className='students-add-button' onClick={handleAddClick}>
-            Add <FaPlus className='student-plus' />
-          </button>
+        
         </div>
       </div>
       <div className='students-group-details'>
-        <table className="group-table">
+        {/* <table className="group-table">
           <thead>
             <tr>
               <th className="group-header">S.No</th>
@@ -130,7 +128,7 @@ const StudentsDatabase = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table> */}
 
         {showDeleteConfirmation && (
           <div className="delete-confirmation-popup">
@@ -181,9 +179,10 @@ const StudentsDatabase = () => {
             </div>
           </div>
         )}
+        <p className='registrations-text'>No registartions have Added yet</p>
       </div>
     </div>
   );
 }
 
-export default StudentsDatabase;
+export default RegistrationStudents;

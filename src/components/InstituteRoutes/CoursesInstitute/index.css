@@ -1,0 +1,13 @@
+.courses-container {
+    display: flex;
+    justify-content: center;
+}
+.course-details-container {
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add this line */
+    border: 1px solid green;
+}
+.courses-heading {
+    text-align: center;
+}

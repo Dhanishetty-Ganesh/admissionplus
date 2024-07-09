@@ -44,7 +44,7 @@
 .sidebar {
     width: 20vw; /* Fixed width */
     box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1); /* Box shadow */
-    background-color: #ffecec6d; /* Light background color */
+    background-color: white; /* Light background color */
     padding-top: 30px;
     overflow-y: auto; /* Enable vertical scrolling */
     position: fixed;  

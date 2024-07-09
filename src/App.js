@@ -17,6 +17,7 @@ import HelpDashboard from './components/DashboardRoutes/HelpDashboard';
 import SettingsDashboard from './components/DashboardRoutes/SettingsDashboard';
 import InfoInstitute from './components/InstituteRoutes/infoInstitute';
 import CoursesInstitute from './components/InstituteRoutes/CoursesInstitute';
+import RegistrationStudents from './components/RegistrationStudents';
 import './App.css';
 
 const AppContent = () => {
@@ -49,6 +50,7 @@ const AppContent = () => {
           <Route exact path="/settingsdashboard" element={<SettingsDashboard />} />
           <Route exact path="/infoinstitute" element={<InfoInstitute />} />
           <Route exact path="/coursesinstitute" element={<CoursesInstitute />} />
+          <Route exact path="/registrationstudents" element={<RegistrationStudents />} />
         </Routes>
       </div>
     </div>

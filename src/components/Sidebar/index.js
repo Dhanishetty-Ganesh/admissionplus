@@ -49,7 +49,7 @@ const Sidebar = () => {
           </div>
           {selectedOption === 'students' && (
             <div className="dropdown-content">
-              <Link to="/registration" className='sidebar-options'>Registration</Link>
+              <Link to="/registrationstudents" className='sidebar-options'>Registration</Link>
               <Link to="/students" className='sidebar-options'>Database</Link>
             </div>
           )}

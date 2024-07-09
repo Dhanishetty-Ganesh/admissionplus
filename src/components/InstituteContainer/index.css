@@ -6,8 +6,8 @@
     margin-top: 10vw;
 }
 .info-logo-style {
-    height: 180px;
-    width: 180px;
+    height: 150px;
+    width: 150px;
 }
 .info-welcome {
     margin-top: 40px;
@@ -17,5 +17,6 @@
     font-weight: bold;
 }
 .info-institute-name {
-    margin-top: 0px;
+    margin-top: 4px;
+    font-size: 28px;
 }

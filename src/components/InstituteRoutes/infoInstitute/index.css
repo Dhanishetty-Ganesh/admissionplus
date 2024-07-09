@@ -58,6 +58,7 @@ element.style {
     padding-right: 45px;
     padding-left: 45px;
     width: 350px;
+    margin-right: 50px;
     padding-bottom: 10px;
  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1); 
 }
@@ -87,4 +88,10 @@ element.style {
     border-radius: 6px;
     height: 350px;
     width: 350px;
+}
+
+.institute-info-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10vh;
 }
