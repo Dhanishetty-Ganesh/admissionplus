@@ -25,8 +25,8 @@ const DashboardPage = () => {
           <Link to="/marketingdashboard" className='left-side-button'><FaBullhorn className='icon' /> Marketing</Link>
           <Link to="/saledashboard" className='left-side-button'><FaChartLine className='icon' /> Sale</Link>
           <div className='bottom-buttons'>
-            <Link to="/help" className='left-side-button'><FaQuestionCircle className='icon' /> Help</Link>
-            <Link to="/settings" className='left-side-button'><FaCog className='icon' /> Settings</Link>
+            <Link to="/helpdashboard" className='left-side-button'><FaQuestionCircle className='icon' /> Help</Link>
+            <Link to="/settingsdashboard" className='left-side-button'><FaCog className='icon' /> Settings</Link>
             <Link to="/logout" className='left-side-button'><FaSignOutAlt className='icon' /> Logout</Link>
           </div>
         </div>

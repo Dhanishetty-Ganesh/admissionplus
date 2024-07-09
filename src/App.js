@@ -13,6 +13,8 @@ import StudentsDatabaseGroupName from './components/StudentsDatabaseGroupName';
 import StudentsDatabase from './components/StudentsDatabase';
 import MarketingDashboard from './components/DashboardRoutes/MarketingDashboard';
 import SaleDashboard from './components/DashboardRoutes/SaleDashboard';
+import HelpDashboard from './components/DashboardRoutes/HelpDashboard';
+import SettingsDashboard from './components/DashboardRoutes/SettingsDashboard';
 import './App.css';
 
 const AppContent = () => {
@@ -41,6 +43,8 @@ const AppContent = () => {
           <Route exact path="/institutedashboard" element={<InstituteRoute />} />
           <Route exact path="/marketingdashboard" element={<MarketingDashboard />} />
           <Route exact path="/saledashboard" element={<SaleDashboard />} />
+          <Route exact path="/helpdashboard" element={<HelpDashboard />} />
+          <Route exact path="/settingsdashboard" element={<SettingsDashboard />} />
         </Routes>
       </div>
     </div>
