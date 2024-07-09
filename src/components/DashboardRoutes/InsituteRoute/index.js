@@ -1,7 +1,6 @@
-// src/components/InstituteRoute/index.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import {  FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import axios from 'axios';
 import DashboardPage from '../../DashboardPage';
@@ -10,6 +9,7 @@ import './index.css';
 const InstituteRoute = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [businesses, setBusinesses] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
   const [formData, setFormData] = useState({
     logo: '',
     name: '',
@@ -29,9 +29,12 @@ const InstituteRoute = () => {
         const response = await axios.get('https://admissionplusbackend.vercel.app/institutes');
         if (response.data && Array.isArray(response.data.result)) {
           setBusinesses(response.data.result);
+          console.log("Fetched institutes:", response.data.result); // Log the fetched data
         }
       } catch (err) {
         console.error('Error fetching data:', err);
+      } finally {
+        setLoading(false); // Set loading to false when data is fetched
       }
     };
     fetchData();
@@ -85,35 +88,45 @@ const InstituteRoute = () => {
     <div className='top-route-container'>
       <DashboardPage />
       <div className='right-section'>
-        {businesses.length === 0 ? (
-          <p className="no-institute-text">
-            You have not added any institute yet. Click on the below plus button to add the institute.
-          </p>
+        {loading ? (
+          <div className="loader-container">
+            <div className="loader"></div>
+          </div>
         ) : (
-          <ul className='business-list-items-container'>
-            {businesses.map((business, index) => (
-              <li className='business-list-item' key={index}>
-                {business.logo && <img src={business.logo} alt="logo" className='business-logo' />}
-                <div>
-                  <p className='business-name'>{business.name}</p>
-                  <p className='business-mobile-no'>{business.mobile}</p>
-                </div>
-                <div>
-                  <p className='business-role'>{business.role}</p>
-                  <p className='business-email'>{business.email}</p>
-                </div>
-                <p className='business-location'><MdLocationOn className='location-logo' />{business.location}</p>
-                <Link className='business-login-button' to="/institutecontainer">Login</Link>
-              </li>
-            ))}
-          </ul>
+          businesses.length === 0 ? (
+            <p className="no-institute-text">
+              You have not added any institute yet. Click on the below plus button to add the institute.
+            </p>
+          ) : (
+            <ul className='business-list-items-container'>
+              {businesses.map((business, index) => (
+                <li className='business-list-item' key={index}>
+                  {business.logo ? (
+                    <img src={business.logo} alt="logo" className='business-logo' onError={(e) => e.target.style.display = 'none'} />
+                  ) : (
+                    <div className='business-logo-placeholder'>No Logo</div>
+                  )}
+                  <div>
+                    <p className='business-name'>{business.name}</p>
+                    <p className='business-mobile-no'>{business.mobile}</p>
+                  </div>
+                  <div>
+                    <p className='business-role'>{business.role}</p>
+                    <p className='business-email'>{business.email}</p>
+                  </div>
+                  <p className='business-location'><MdLocationOn className='location-logo' />{business.location}</p>
+                  <Link className='business-login-button' to="/institutecontainer">Login</Link>
+                </li>
+              ))}
+            </ul>
+          )
         )}
       </div>
       {isFormVisible && (
         <div className='popup-form'>
           <form onSubmit={handleFormSubmit}>
             <label className='form-label'>
-              <span>Upload Your Logo</span>
+              <span>Upload Institute Logo</span>
               <input
                 type="file"
                 name="logo"

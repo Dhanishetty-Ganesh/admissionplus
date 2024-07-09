@@ -15,6 +15,8 @@ import MarketingDashboard from './components/DashboardRoutes/MarketingDashboard'
 import SaleDashboard from './components/DashboardRoutes/SaleDashboard';
 import HelpDashboard from './components/DashboardRoutes/HelpDashboard';
 import SettingsDashboard from './components/DashboardRoutes/SettingsDashboard';
+import InfoInstitute from './components/InstituteRoutes/infoInstitute';
+import CoursesInstitute from './components/InstituteRoutes/CoursesInstitute';
 import './App.css';
 
 const AppContent = () => {
@@ -45,6 +47,8 @@ const AppContent = () => {
           <Route exact path="/saledashboard" element={<SaleDashboard />} />
           <Route exact path="/helpdashboard" element={<HelpDashboard />} />
           <Route exact path="/settingsdashboard" element={<SettingsDashboard />} />
+          <Route exact path="/infoinstitute" element={<InfoInstitute />} />
+          <Route exact path="/coursesinstitute" element={<CoursesInstitute />} />
         </Routes>
       </div>
     </div>

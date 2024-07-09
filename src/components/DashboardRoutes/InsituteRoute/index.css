@@ -1,9 +1,8 @@
-/* src/components/InstituteRoute/index.css */
 .top-route-container {
   display: flex;
   flex-direction: row;
-  height: 100vh; /* Full viewport height */
-  background-color: #f4f4f9; /* Light background color */
+  height: 100vh; 
+  background-color: #f4f4f9;
 }
 
 .no-institute-text {
@@ -160,7 +159,7 @@
 }
 
 .popup-form .form-button[type="submit"] {
-  background-color: mediumorchid;
+  background-color: blue;
   color: white;
 }
 
@@ -175,4 +174,36 @@
 
 .popup-form .form-button[type="submit"]:hover {
   background-color: #8b008b;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.right-section {
+  position: relative;
+}
+
+.loader-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

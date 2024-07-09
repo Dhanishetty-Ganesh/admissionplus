@@ -1,0 +1,90 @@
+
+.bottom-containers {
+    display: flex;
+    height: calc(100vh - 60px); /* Adjusted height to account for the top section */
+    margin: 0;
+    padding: 0;
+}
+
+
+.two-options {
+    display: flex;
+    align-items: center;
+}
+
+.option-logo {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+
+/* Right section styling */
+.institute-right-section {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    margin: 0;
+}
+.institute-details-container {
+    display: flex;
+    padding: 20px;
+    padding-top: 40px;
+    width: 90%;
+    border-radius: 6px;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.institute-details-heading {
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.qr-code-style {
+    height: 50vh;
+    width: 50vw;
+}
+element.style {
+    height: 0px;
+    width: 0px;
+}
+.name-style {
+    font-weight: bold;
+}
+.institute-details-card {
+    background-color: white;
+    border-radius: 6px;
+    padding-right: 45px;
+    padding-left: 45px;
+    width: 350px;
+    padding-bottom: 10px;
+ box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1); 
+}
+.institute-logo-style {
+    margin-left: 140px;
+    width: 60px; 
+    height: 60px; 
+}
+.qr-code-heading {
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+}
+.download-symbol {
+    font-size: 28px;
+    outline: none;
+    cursor: pointer;
+}
+.institute-qr-container {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+    background-color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    height: 350px;
+    width: 350px;
+}
