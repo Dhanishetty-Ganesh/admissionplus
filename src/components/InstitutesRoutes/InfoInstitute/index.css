@@ -95,3 +95,12 @@ element.style {
     justify-content: space-between;
     margin-top: 10vh;
 }
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Full height of the parent */
+  }
+  .info-loader-cont {
+    margin-left: 40px;
+  }

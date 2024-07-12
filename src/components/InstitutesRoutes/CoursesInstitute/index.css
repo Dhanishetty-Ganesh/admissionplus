@@ -1,0 +1,64 @@
+.courses-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.course-details-container {
+    width: 330px; /* Fixed width */
+    margin-top: 10px;
+    text-align: center;
+    height: 200px; /* Fixed height */
+    position: relative; /* Necessary for positioning the front and back faces */
+    transform-style: preserve-3d; /* 3D effect */
+    transition: transform 0.6s; /* Smooth transition */
+}
+
+.course-details-container:hover {
+    transform: rotateY(180deg); /* Rotate the card */
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden; /* Hide back face */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.1);
+}
+
+.front {
+    background: #fff; /* Front face background */
+}
+
+.back {
+    background: #F8F8F8; /* Back face background */
+    color: #6E6E6F; /* Text color for back face */
+    transform: rotateY(180deg); /* Rotate the back face to be hidden initially */
+}
+
+.courses-heading {
+    text-align: center;
+}
+
+.para-course {
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.main-heading-course {
+    color: orange;
+    font-size: 60px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    padding-top: 2px;
+    margin-top: 2px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+.back-side-text {
+    font-size: 24px;
+}

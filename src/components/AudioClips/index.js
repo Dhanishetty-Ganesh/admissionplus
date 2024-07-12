@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "./index.css";
 import { FaPlus } from "react-icons/fa6";
 import { AiTwotoneEdit } from "react-icons/ai";
 import Sidebar from '../Sidebar';
 import { MdDeleteOutline } from "react-icons/md";
-
 
 const AudioClips = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -20,6 +19,24 @@ const AudioClips = () => {
     audioFile: null,
   });
 
+  // Fetch audio clips from backend on component mount
+  useEffect(() => {
+    fetchAudioClips();
+  }, []);
+
+  const fetchAudioClips = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/audioclips'); // Replace with your backend URL
+      if (!response.ok) {
+        throw new Error('Failed to fetch audio clips');
+      }
+      const data = await response.json();
+      setAudioClips(data.result);
+    } catch (error) {
+      console.error('Error fetching audio clips:', error);
+    }
+  };
+
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
     setIsEditMode(false);
@@ -34,42 +51,48 @@ const AudioClips = () => {
     }));
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (formData.audioFile) {
-      const audioElement = document.createElement('audio');
-      audioElement.src = URL.createObjectURL(formData.audioFile);
-      audioElement.onloadedmetadata = () => {
-        const newClip = {
-          id: isEditMode ? editId : audioClips.length + 1,
-          date: new Date().toLocaleString(),
-          voiceName: formData.voiceName,
-          voiceId: formData.voiceId,
-          audioFile: formData.audioFile,
-          duration: audioElement.duration,
-          description: formData.description,
-        };
-        if (isEditMode) {
-          setAudioClips(audioClips.map(clip => clip.id === editId ? newClip : clip));
-        } else {
-          setAudioClips([...audioClips, newClip]);
-        }
-        setFormData({ voiceName: '', voiceId: '', description: '', audioFile: null });
-        setIsPopupOpen(false);
-        setIsEditMode(false);
-        setEditId(null);
-      };
+    const formDataToSend = new FormData();
+    formDataToSend.append('voiceName', formData.voiceName);
+    formDataToSend.append('voiceId', formData.voiceId);
+    formDataToSend.append('description', formData.description);
+    formDataToSend.append('audioFile', formData.audioFile);
+
+    try {
+      let response;
+      if (isEditMode) {
+        response = await fetch(`http://localhost:3001/audioclips/${editId}`, {
+          method: 'PUT',
+          body: formDataToSend,
+        });
+      } else {
+        response = await fetch('http://localhost:3001/audioclips', {
+          method: 'POST',
+          body: formDataToSend,
+        });
+      }
+      if (!response.ok) {
+        throw new Error('Failed to submit audio clip');
+      }
+      await response.json();
+      fetchAudioClips(); // Refresh audio clips after submission
+      setFormData({ voiceName: '', voiceId: '', description: '', audioFile: null });
+      setIsPopupOpen(false);
+      setIsEditMode(false);
+      setEditId(null);
+    } catch (error) {
+      console.error('Error submitting audio clip:', error);
     }
   };
 
   const handleEdit = (id) => {
-    const clip = audioClips.find(clip => clip.id === id);
+    const clip = audioClips.find(clip => clip._id === id);
     if (clip) {
       setFormData({
         voiceName: clip.voiceName,
         voiceId: clip.voiceId,
         description: clip.description,
-        audioFile: clip.audioFile,
       });
       setIsPopupOpen(true);
       setIsEditMode(true);
@@ -82,10 +105,20 @@ const AudioClips = () => {
     setShowDeleteConfirmation(true);
   };
 
-  const handleDelete = () => {
-    setAudioClips(audioClips.filter(clip => clip.id !== deleteId));
-    setShowDeleteConfirmation(false);
-    setDeleteId(null);
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`http://localhost:3001/audioclips/${deleteId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete audio clip');
+      }
+      fetchAudioClips(); // Refresh audio clips after deletion
+      setShowDeleteConfirmation(false);
+      setDeleteId(null);
+    } catch (error) {
+      console.error('Error deleting audio clip:', error);
+    }
   };
 
   const handleCancelDelete = () => {
@@ -95,7 +128,7 @@ const AudioClips = () => {
 
   return (
     <div className='audioclips-container'>
-      <Sidebar/>
+      <Sidebar />
       <div className='audioclips-top-container'>
         <h1 className='audioclips-heading'>Audio Clips</h1>
         <div className='audioclips-heading-container'>
@@ -193,22 +226,22 @@ const AudioClips = () => {
           </thead>
           <tbody>
             {audioClips.map((clip, index) => (
-              <tr key={clip.id} className='audioclips-tr'>
+              <tr key={clip._id} className='audioclips-tr'>
                 <td className='audioclips-td'>{index + 1}</td>
                 <td className='audioclips-td'>{clip.date}</td>
                 <td className='audioclips-td'>{clip.voiceName}</td>
                 <td className='audioclips-td'>{clip.voiceId}</td>
                 <td className='audioclips-td audioclips-audio-music'>
                   <audio controls className='audioclips-audio'>
-                    <source src={URL.createObjectURL(clip.audioFile)} type={clip.audioFile.type} />
+                    <source src={`http://localhost:3001/${clip.audioFile}`} type={clip.audioFile.type} />
                     Your browser does not support the audio element.
                   </audio>
                 </td>
                 <td className='audioclips-td'>{clip.duration.toFixed(2)} seconds</td>
                 <td className='audioclips-td'>{clip.description}</td>
                 <td className='audioclips-td'>
-                  <button className='audioclips-edit-button' onClick={() => handleEdit(clip.id)}><AiTwotoneEdit /></button>
-                  <button className='audioclips-delete-button' onClick={() => handleDeleteConfirmation(clip.id)}><MdDeleteOutline /></button>
+                  <button className='audioclips-edit-button' onClick={() => handleEdit(clip._id)}><AiTwotoneEdit /></button>
+                  <button className='audioclips-delete-button' onClick={() => handleDeleteConfirmation(clip._id)}><MdDeleteOutline /></button>
                 </td>
               </tr>
             ))}

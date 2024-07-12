@@ -7,50 +7,53 @@ import PlansRoute from './components/DashboardRoutes/PlansRoute';
 import MarketingData from './components/MarketingData';
 import Marketing from './components/Marketing';
 import AudioClips from './components/AudioClips';
-import InstituteRoute from './components/DashboardRoutes/InsituteRoute';
-import InstituteContainer from './components/InstituteContainer';
 import StudentsDatabaseGroupName from './components/StudentsDatabaseGroupName';
 import StudentsDatabase from './components/StudentsDatabase';
+import InstituteContainer from './components/InstituteContainer';
 import MarketingDashboard from './components/DashboardRoutes/MarketingDashboard';
 import SaleDashboard from './components/DashboardRoutes/SaleDashboard';
 import HelpDashboard from './components/DashboardRoutes/HelpDashboard';
 import SettingsDashboard from './components/DashboardRoutes/SettingsDashboard';
-import InfoInstitute from './components/InstituteRoutes/infoInstitute';
-import CoursesInstitute from './components/InstituteRoutes/CoursesInstitute';
+import CoursesInstitute from './components/InstitutesRoutes/CoursesInstitute';
 import RegistrationStudents from './components/RegistrationStudents';
+import InstituteRoute from './components/DashboardRoutes/InstituteRoute'; // Corrected path
+import InfoInstitute from './components/InstitutesRoutes/InfoInstitute';
 import './App.css';
 
 const AppContent = () => {
   const location = useLocation();
 
   // Determine if the sidebar should be shown and fixed
-  const fixedSidebar = ['/students', '/credits', '/marketing', '/institutecontainer', '/audioclips', '/marketing/:marketingname', '/studentsdatabase/groupname/:groupname'].includes(location.pathname);
+  const fixedSidebarPaths = [
+    '/students', '/credits', '/marketing', '/institutecontainer', 
+    '/audioclips', '/marketing/:marketingname', '/studentsdatabase/groupname/:groupname'
+  ];
+  const fixedSidebar = fixedSidebarPaths.some(path => location.pathname.includes(path));
   const showSidebar = !['/dashboardpage', '/'].includes(location.pathname);
   const showTopSection = !['/dashboardpage', '/'].includes(location.pathname);
 
   return (
     <div className={`app-container ${fixedSidebar ? 'fixed-sidebar' : ''}`}>
-    
       <div className={`main-content ${showTopSection ? 'with-top-section' : 'no-top-section'} ${fixedSidebar ? 'shrinked' : ''} ${showSidebar ? 'with-sidebar' : ''}`}>
         <Routes>
-          <Route exact path="/" element={<GoogleLoginPage />} />
-          {/* <Route exact path="/dashboardpage" element={<DashboardPage />} /> */}
-          <Route exact path="/credits" element={<CreditsPage />} />
-          <Route exact path="/audioclips" element={<AudioClips />} />
-          <Route exact path="/marketing" element={<Marketing />} />
-          <Route exact path="/students" element={<StudentsDatabase />} />
-          <Route exact path="/studentsdatabase/groupname/:groupname" element={<StudentsDatabaseGroupName />} />
-          <Route exact path="/marketing/:marketingname" element={<MarketingData />} />
-          <Route exact path="/institutecontainer" element={<InstituteContainer />} />
-          <Route exact path="/plandashboard" element={<PlansRoute />} />
-          <Route exact path="/institutedashboard" element={<InstituteRoute />} />
-          <Route exact path="/marketingdashboard" element={<MarketingDashboard />} />
-          <Route exact path="/saledashboard" element={<SaleDashboard />} />
-          <Route exact path="/helpdashboard" element={<HelpDashboard />} />
-          <Route exact path="/settingsdashboard" element={<SettingsDashboard />} />
-          <Route exact path="/infoinstitute" element={<InfoInstitute />} />
-          <Route exact path="/coursesinstitute" element={<CoursesInstitute />} />
-          <Route exact path="/registrationstudents" element={<RegistrationStudents />} />
+          <Route path="/" element={<GoogleLoginPage />} />
+          <Route path="/dashboardpage" element={<DashboardPage />} />
+          <Route path="/credits/:id" element={<CreditsPage />} />
+          <Route path="/audioclips/:id" element={<AudioClips />} />
+          <Route path="/marketing/:id" element={<Marketing />} />
+          <Route path="/students/:id" element={<StudentsDatabase />} />
+          <Route path="/studentsdatabase/groupname/:groupname/:id" element={<StudentsDatabaseGroupName />} />
+          <Route path="/marketing/:marketingname/:id" element={<MarketingData />} />
+          <Route path="/institutecontainer/:id" element={<InstituteContainer />} />
+          <Route path="/plandashboard" element={<PlansRoute />} />
+          <Route path="/institutedashboard" element={<InstituteRoute />} />
+          <Route path="/marketingdashboard/:id" element={<MarketingDashboard />} />
+          <Route path="/saledashboard" element={<SaleDashboard />} />
+          <Route path="/helpdashboard" element={<HelpDashboard />} />
+          <Route path="/settingsdashboard" element={<SettingsDashboard />} />
+          <Route path="/infoinstitute/:id" element={<InfoInstitute />} />
+          <Route path="/coursesinstitute/:id" element={<CoursesInstitute />} />
+          <Route path="/registrationstudents/:id" element={<RegistrationStudents />} />
         </Routes>
       </div>
     </div>

@@ -9,7 +9,7 @@ import './index.css';
 const InstituteRoute = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [businesses, setBusinesses] = useState([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     logo: '',
     name: '',
@@ -22,19 +22,18 @@ const InstituteRoute = () => {
     pincode: '',
   });
 
-  // Fetch data when the component mounts
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://admissionplusbackend.vercel.app/institutes');
         if (response.data && Array.isArray(response.data.result)) {
           setBusinesses(response.data.result);
-          console.log("Fetched institutes:", response.data.result); // Log the fetched data
+          console.log("Fetched institutes:", response.data.result);
         }
       } catch (err) {
         console.error('Error fetching data:', err);
       } finally {
-        setLoading(false); // Set loading to false when data is fetched
+        setLoading(false);
       }
     };
     fetchData();
@@ -48,16 +47,36 @@ const InstituteRoute = () => {
     }));
   };
 
-  const handleFileChange = (e) => {
+  const getUrl = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('https://admissionplusbackend.vercel.app/upload', {
+        method: "POST",
+        body: formData
+      });
+      const data = await response.json();
+      return data.Location;
+    } catch (error) {
+      alert("File Upload Failed");
+      console.error('Error uploading file:', error.response ? error.response.data : error.message);
+    }
+  };
+
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    setFormData((prevData) => ({
-      ...prevData,
-      logo: URL.createObjectURL(file)
+    const imageUrl = await getUrl(file);
+    console.log(imageUrl);
+    setFormData((prev) => ({
+      ...prev,
+      logo : imageUrl
     }));
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post('https://admissionplusbackend.vercel.app/institutes', formData);
       if (response.data && response.data.result) {
@@ -77,6 +96,8 @@ const InstituteRoute = () => {
       });
     } catch (err) {
       console.error('Error submitting form:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -115,7 +136,7 @@ const InstituteRoute = () => {
                     <p className='business-email'>{business.email}</p>
                   </div>
                   <p className='business-location'><MdLocationOn className='location-logo' />{business.location}</p>
-                  <Link className='business-login-button' to="/institutecontainer">Login</Link>
+                  <Link className='business-login-button' to={`/institutecontainer/${business._id}`}>Login</Link>
                 </li>
               ))}
             </ul>
