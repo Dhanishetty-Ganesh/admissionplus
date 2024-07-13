@@ -1,9 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
-import { FaPlus, FaTimes } from 'react-icons/fa';
 import Sidebar from '../Sidebar';
 import "./index.css";
 
