@@ -7,6 +7,9 @@ const CoursesInstitute = () => {
   return (
     <div>
       <Sidebar />
+      <div className='students-top-content'>
+        <h1 className='students-heading'>Institute &gt; Courses</h1>
+        </div>
       <h1 className='courses-heading'>Courses</h1>
       <div className='courses-container'>
           <Link to="https://mscit.mkcl.org/course-details/medium"  className='course-details-container' target="_blank" rel="noopener noreferrer">

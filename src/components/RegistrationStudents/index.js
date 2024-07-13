@@ -47,8 +47,8 @@ const RegistrationStudents = () => {
     <div className='database-content'>
       <Sidebar/>
       <div className='students-top-content'>
-        <h1 className='students-heading'>Registrations</h1>
-      </div>
+        <h1 className='students-heading'>Students &gt; Registration</h1>
+        </div>
       <div className='students-group-details'>
         {formSubmissions.length > 0 ? (
           <table className="group-table">

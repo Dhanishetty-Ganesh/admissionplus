@@ -92,7 +92,7 @@ const StudentsDatabase = () => {
     <div className='database-content'>
       <Sidebar/>
       <div className='students-top-content'>
-        <h1 className='students-heading'>Database</h1>
+        <h1 className='students-heading'>Students &gt; Database</h1>
         <div className='students-add-button-container'>
           <button className='students-add-button' onClick={handleAddClick}>
             Add <FaPlus className='student-plus' />

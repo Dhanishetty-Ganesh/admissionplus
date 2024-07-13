@@ -75,7 +75,7 @@ const Marketing = () => {
     <div className='marketingmain-content'>
       <Sidebar/>
       <div className='marketingmain-top-container'>
-        <h1 className='marketingmain-heading'>Marketing</h1>
+        <h1 className='marketingmain-heading'>Voice(IVR) &gt; Marketing</h1>
         <div className='marketingmain-heading-container'>
           <button className='marketingmain-add-button' onClick={togglePopup}>
               Add <FaPlus className='marketingmain-plus-logo' />

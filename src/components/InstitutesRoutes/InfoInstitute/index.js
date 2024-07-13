@@ -55,6 +55,9 @@ const InfoInstitute = () => {
   return (
    <div>
       <Sidebar />
+      <div className='students-top-content'>
+        <h1 className='students-heading'>Institute &gt; Info</h1>
+        </div>
       <div className='institute-details-container'>
         <div className='institute-details-card'>
           <h1 className='institute-details-heading'>Institute Details</h1>

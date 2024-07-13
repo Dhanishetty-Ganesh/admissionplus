@@ -26,7 +26,7 @@ const CreditsPage = () => {
   };
 
   const handleCreditInputChange = (e) => {
-    const credit = parseInt(e.target.value, 10) || 0;
+    const credit = parseInt(e.target.value, 10) || '';
     setInputCredit(credit);
 
     let calculatedAmount = 0;
@@ -38,8 +38,9 @@ const CreditsPage = () => {
       // Use an interpolated rate or a fixed rate for intermediate values
       calculatedAmount = credit * 0.9; // Example rate for values between 1000 and 5000
     }
-    
+
     setInputAmount(calculatedAmount.toFixed(2)); // Convert to a fixed 2 decimal places string
+    setSelectedAmount(calculatedAmount); // Automatically select the radio button
   };
 
   const sampleData = [
@@ -52,9 +53,9 @@ const CreditsPage = () => {
 
   return (
     <div>
-      <Sidebar/>
+      <Sidebar />
       <div className='students-top-content'>
-        <h1 className='students-heading'>Credits</h1>
+        <h1 className='students-heading'>Credits &gt; Plans</h1>
         <div className='students-add-button-container'>
           <button className='credits-history-button' onClick={toggleTableVisibility}>
             <FaHistory className='credit-history-logo' />
@@ -62,7 +63,7 @@ const CreditsPage = () => {
           </button>
         </div>
       </div>
-      
+
       {!isTableVisible ? (
         <div className='credits-bottom-section'>
           <div>
@@ -133,7 +134,7 @@ const CreditsPage = () => {
               <p className='credits-para'>Voice IVR</p>
             </div>
             <button className='talk-button'>
-              <img src="https://res.cloudinary.com/dvwnbhpcy/image/upload/v1720023253/download_1_ow6he3.png" alt="whatsup" className='whatsapp-logo'/> Talk to Us
+              <img src="https://res.cloudinary.com/dvwnbhpcy/image/upload/v1720023253/download_1_ow6he3.png" alt="whatsup" className='whatsapp-logo' /> Talk to Us
             </button>
           </div>
         </div>

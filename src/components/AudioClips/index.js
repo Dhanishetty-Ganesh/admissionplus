@@ -130,7 +130,7 @@ const AudioClips = () => {
     <div className='audioclips-container'>
       <Sidebar />
       <div className='audioclips-top-container'>
-        <h1 className='audioclips-heading'>Audio Clips</h1>
+        <h1 className='audioclips-heading'>Voice(IVR) &gt; AudioClips</h1>
         <div className='audioclips-heading-container'>
           <button className='audioclips-add-button' onClick={togglePopup}>
             Add <FaPlus className='audioclips-plus-logo' />
