@@ -1,91 +1,48 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
-import { FaPlus, FaTimes } from 'react-icons/fa'; // Add FaPlus and FaTimes imports
-import {Link} from "react-router-dom"
+import { FaPlus, FaTimes } from 'react-icons/fa';
 import Sidebar from '../Sidebar';
-import "./index.css"
-
+import "./index.css";
 
 const RegistrationStudents = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editGroupId, setEditGroupId] = useState(null);
-  const [groupData, setGroupData] = useState([
-    { id: 1, groupName: 'Admins', totalUsers: 5, category: 'Management' },
-    { id: 2, groupName: 'Editors', totalUsers: 12, category: 'Content' },
-    { id: 3, groupName: 'Users', totalUsers: 45, category: 'General' },
-    { id: 4, groupName: 'Guests', totalUsers: 30, category: 'Temporary' },
-  ]);
-  const [formData, setFormData] = useState({ groupName: '', category: '' });
-  const [deleteGroupId, setDeleteGroupId] = useState(null);
+  const [formSubmissions, setFormSubmissions] = useState([]);
+  const [deleteSubmissionId, setDeleteSubmissionId] = useState(null);
 
-  const handleAddClick = () => {
-    setShowPopup(true);
-    setIsEditing(false);
-    setFormData({ groupName: '', category: '' });
-  };
+  useEffect(() => {
+    fetchFormSubmissions();
+  }, []);
 
-  const handleCloseClick = () => {
-    setShowPopup(false);
-    setFormData({ groupName: '', category: '' });
-    setIsEditing(false);
-    setEditGroupId(null);
-  };
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    if (formData.groupName && formData.category) {
-      if (isEditing) {
-        setGroupData((prevData) =>
-          prevData.map((group) =>
-            group.id === editGroupId
-              ? { ...group, groupName: formData.groupName, category: formData.category }
-              : group
-          )
-        );
-      } else {
-        const newGroup = {
-          id: groupData.length + 1,
-          groupName: formData.groupName,
-          totalUsers: 0,
-          category: formData.category,
-        };
-        setGroupData([...groupData, newGroup]);
-      }
-      handleCloseClick();
+  const fetchFormSubmissions = async () => {
+    try {
+      const response = await axios.get('https://admissionplusbackend.vercel.app/form');
+      setFormSubmissions(response.data.result);
+    } catch (error) {
+      console.error('Error fetching form submissions:', error);
     }
   };
 
   const handleDelete = (id) => {
-    setDeleteGroupId(id);
+    setDeleteSubmissionId(id);
     setShowDeleteConfirmation(true);
   };
 
-  const handleConfirmDelete = () => {
-    setGroupData(groupData.filter(group => group.id !== deleteGroupId));
-    setShowDeleteConfirmation(false);
+  const handleConfirmDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:3001/form/${deleteSubmissionId}`);
+      setFormSubmissions(formSubmissions.filter(submission => submission._id !== deleteSubmissionId));
+      setShowDeleteConfirmation(false);
+    } catch (error) {
+      console.error('Error deleting submission:', error);
+    }
   };
 
   const handleCancelDelete = () => {
     setShowDeleteConfirmation(false);
-  };
-
-  const handleEditClick = (id) => {
-    const group = groupData.find(group => group.id === id);
-    if (group) {
-      setFormData({ groupName: group.groupName, category: group.category });
-      setShowPopup(true);
-      setIsEditing(true);
-      setEditGroupId(id);
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   return (
@@ -93,96 +50,54 @@ const RegistrationStudents = () => {
       <Sidebar/>
       <div className='students-top-content'>
         <h1 className='students-heading'>Registrations</h1>
-        <div className='students-add-button-container'>
-        
-        </div>
       </div>
       <div className='students-group-details'>
-        {/* <table className="group-table">
-          <thead>
-            <tr>
-              <th className="group-header">S.No</th>
-              <th className="group-header students-database-link">Group Name</th>
-              <th className="group-header">Total Users</th>
-              <th className="group-header">Course Category</th>
-              <th className="group-header">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {groupData.map((item) => (
-              <tr key={item.id} className="group-row">
-                <td className="group-cell">{item.id}</td>
-                <Link to = {`/studentsdatabase/groupname/${item.groupName}`}><td className="group-cell">{item.groupName}</td></Link>
-                <td className="group-cell">{item.totalUsers}</td>
-                <td className="group-cell">{item.category}</td>
-                <td className="group-cell">
-                  <CiEdit
-                    className="group-icon group-icon-edit"
-                    onClick={() => handleEditClick(item.id)}
-                  />
-                  <MdDeleteOutline
-                    className="group-icon group-icon-delete"
-                    onClick={() => handleDelete(item.id)}
-                  />
-                </td>
+        {formSubmissions.length > 0 ? (
+          <table className="group-table">
+            <thead>
+              <tr>
+                <th className="group-header">Date</th>
+                <th className="group-header">Name</th>
+                <th className="group-header">Mobile</th>
+                <th className="group-header">Email</th>
+                <th className="group-header">Course</th>
+                <th className="group-header">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table> */}
+            </thead>
+            <tbody>
+              {formSubmissions.map((submission, index) => (
+                <tr key={submission._id} className="group-row">
+                  <td className="group-cell">{new Date(submission.date).toLocaleDateString()}</td>
+                  <td className="group-cell">{submission.name}</td>
+                  <td className="group-cell">{submission.mobile}</td>
+                  <td className="group-cell">{submission.email}</td>
+                  <td className="group-cell">{submission.course}</td>
+                  <td className="group-cell">
+                    <MdDeleteOutline
+                      className="group-icon group-icon-delete"
+                      onClick={() => handleDelete(submission._id)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className='registrations-text'>No registrations have been added yet</p>
+        )}
 
         {showDeleteConfirmation && (
           <div className="delete-confirmation-popup">
-            <p className="delete-confirmation-text">Are you sure you want to delete this group?</p>
+            <p className="delete-confirmation-text">Are you sure you want to delete this submission?</p>
             <div className="delete-confirmation-buttons">
               <button className="delete-confirmation-button delete-confirmation-button-no" onClick={handleCancelDelete}>No</button>
               <button className="delete-confirmation-button" onClick={handleConfirmDelete}>Yes</button>
             </div>
           </div>
         )}
-
-        {showPopup && (
-          <div className='group-popup-overlay'>
-            <div className='group-popup-content'>
-              <button className='group-close-button' onClick={handleCloseClick}>
-                <FaTimes />
-              </button>
-              <h2>{isEditing ? 'Edit Group' : 'Add Group'}</h2>
-              <form onSubmit={handleFormSubmit} className='group-popup-form'>
-                <label className='group-label'>
-                  Group Name:
-                  <input
-                    type='text'
-                    name='groupName'
-                    value={formData.groupName}
-                    onChange={handleInputChange}
-                    placeholder='Enter group name'
-                    className='group-input'
-                    required
-                  />
-                </label>
-                <label className='group-label'>
-                  Course Category:
-                  <input
-                    type='text'
-                    name='category'
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    placeholder='Enter Course category'
-                    className='group-input'
-                    required
-                  />
-                </label>
-                <div className='group-submit-button-container'>
-                  <button type='submit' className='group-submit-button'>Submit</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-        <p className='registrations-text'>No registartions have Added yet</p>
       </div>
     </div>
   );
-}
+};
 
 export default RegistrationStudents;

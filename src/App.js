@@ -55,7 +55,7 @@ const AppContent = () => {
           <Route path="/infoinstitute/:id" element={<InfoInstitute />} />
           <Route path="/coursesinstitute/:id" element={<CoursesInstitute />} />
           <Route path="/registrationstudents/:id" element={<RegistrationStudents />} />
-          <Route path="/form" element={<QRCodeForm />} />
+          <Route path="/form/:id" element={<QRCodeForm />} />
         </Routes>
       </div>
     </div>
