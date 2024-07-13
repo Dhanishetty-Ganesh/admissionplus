@@ -63,6 +63,9 @@
   .qr-institute-info {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
   }
   .qrform-powered {
     margin-top: 20px;
@@ -115,11 +118,11 @@
         width: 90%;
     }
     .qr-institute-name {
-        font-size: 14px;
+        font-size: 18px;
     }
     .qr-institute-logo {
-        height: 20px;
-        width: 20px;
+        height: 50px;
+        width: 50px;
         border-radius: 50%;
     }
   }

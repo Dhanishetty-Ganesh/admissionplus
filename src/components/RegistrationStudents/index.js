@@ -31,7 +31,7 @@ const RegistrationStudents = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:3001/form/${deleteSubmissionId}`);
+      await axios.delete(`https://admissionplusbackend.vercel.app/form/${deleteSubmissionId}`);
       setFormSubmissions(formSubmissions.filter(submission => submission._id !== deleteSubmissionId));
       setShowDeleteConfirmation(false);
     } catch (error) {
