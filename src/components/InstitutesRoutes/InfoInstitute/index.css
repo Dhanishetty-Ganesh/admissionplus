@@ -21,9 +21,9 @@
 .institute-details-container {
     display: flex;
     flex-direction: row;
-    padding: 30px;
-    justify-content: space-between;
-    padding-top: 60px;
+    /* padding: 30px; */
+    justify-content: space-evenly;
+     padding-top: 60px;
 }
 
 .institute-details-heading {
