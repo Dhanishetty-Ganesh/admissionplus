@@ -53,9 +53,9 @@ const InfoInstitute = () => {
   }
 
   return (
-    <div className='institute-details-container'>
+   <div>
       <Sidebar />
-      <div className='institute-info-container'>
+      <div className='institute-details-container'>
         <div className='institute-details-card'>
           <h1 className='institute-details-heading'>Institute Details</h1>
           <img src={institute.logo || 'default-logo-url.jpg'} alt="institute-logo" className='institute-logo-style' />
@@ -74,7 +74,7 @@ const InfoInstitute = () => {
             onClick={() => handleDownload('https://res.cloudinary.com/dvwnbhpcy/image/upload/v1720009834/Copy_of_QR_code1_lnumex.jpg', 'QRCode.jpg')}
           />
         </div>
-      </div>
+    </div>
     </div>
   );
 };

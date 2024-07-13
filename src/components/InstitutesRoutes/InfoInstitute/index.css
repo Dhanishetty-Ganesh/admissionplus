@@ -18,21 +18,12 @@
 }
 
 
-/* Right section styling */
-.institute-right-section {
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    margin: 0;
-}
 .institute-details-container {
     display: flex;
-    padding: 20px;
-    padding-top: 40px;
-    width: 90%;
-    border-radius: 6px;
+    flex-direction: row;
+    padding: 30px;
     justify-content: space-between;
-    margin-bottom: 20px;
+    padding-top: 60px;
 }
 
 .institute-details-heading {
@@ -57,8 +48,9 @@ element.style {
     border-radius: 6px;
     padding-right: 45px;
     padding-left: 45px;
+    margin-right: 10px;
     width: 350px;
-    margin-right: 50px;
+    border: 1px solid black;
     padding-bottom: 10px;
  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1); 
 }
@@ -80,6 +72,8 @@ element.style {
 .institute-qr-container {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
     background-color: white;
+    border: 1px solid black;
+
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -90,11 +84,7 @@ element.style {
     width: 350px;
 }
 
-.institute-info-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10vh;
-}
+
 .loader-container {
     display: flex;
     justify-content: center;

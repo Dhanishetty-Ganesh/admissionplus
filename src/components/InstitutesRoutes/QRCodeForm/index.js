@@ -60,8 +60,8 @@ const QRCodeForm = () => {
   return (
     <div className="qrform-container">
       <div className="qr-institute-info">
+      <h1 className="qr-institute-name">{institute.name}</h1>
         <img src={institute.logo || 'default-logo-url.jpg'} alt="institute-logo" className="qr-institute-logo" />
-        <h1 className="qr-institute-name">{institute.name}</h1>
       </div>
       <h1 className="qrform-heading">Students Registration</h1>
       <form onSubmit={handleSubmit} className="qrform-form">
