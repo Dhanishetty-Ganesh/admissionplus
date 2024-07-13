@@ -67,7 +67,7 @@ const InfoInstitute = () => {
         </div>
         <div className='institute-qr-container'>
           <p className='qr-code-heading'>{institute.name}</p>
-          <QRCode value={`${window.location.origin}/form`} className='qr-code-style' />
+          <QRCode value={`https://admissionplus.vercel.app/form`} className='qr-code-style' />
           <p>Scan the QR Code</p>
           <IoMdDownload
             className='download-symbol'

@@ -20,15 +20,21 @@ const InstituteRoute = () => {
     city: '',
     district: '',
     pincode: '',
+    coursesAvailable: '',
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://admissionplusbackend.vercel.app/institutes');
+        console.log("API Response:", response.data); // Log the entire response
+
         if (response.data && Array.isArray(response.data.result)) {
           setBusinesses(response.data.result);
-          console.log("Fetched institutes:", response.data.result);
+        } else if (response.data.failure) {
+          console.log("Error message from API:", response.data.failure);
+        } else {
+          console.log("Unexpected response format:", response.data);
         }
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -61,8 +67,8 @@ const InstituteRoute = () => {
     } catch (error) {
       alert("File Upload Failed");
       console.error('Error uploading file:', error.response ? error.response.data : error.message);
-    }
-  };
+    }
+  };
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -70,7 +76,7 @@ const InstituteRoute = () => {
     console.log(imageUrl);
     setFormData((prev) => ({
       ...prev,
-      logo : imageUrl
+      logo: imageUrl
     }));
   };
 
@@ -81,6 +87,8 @@ const InstituteRoute = () => {
       const response = await axios.post('https://admissionplusbackend.vercel.app/institutes', formData);
       if (response.data && response.data.result) {
         setBusinesses((prevBusinesses) => [...prevBusinesses, response.data.result]);
+      } else {
+        console.log("Unexpected response format:", response.data);
       }
       setIsFormVisible(false);
       setFormData({
@@ -93,6 +101,7 @@ const InstituteRoute = () => {
         city: '',
         district: '',
         pincode: '',
+        coursesAvailable: '',
       });
     } catch (err) {
       console.error('Error submitting form:', err);
@@ -255,8 +264,10 @@ const InstituteRoute = () => {
               <span>Courses Available</span>
               <input
                 type="text"
-                name="Courses Available"
+                name="coursesAvailable"
                 placeholder="Courses Available"
+                value={formData.coursesAvailable}
+                onChange={handleFormChange}
                 className='form-input'
                 required
               />
