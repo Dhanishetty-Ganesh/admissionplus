@@ -42,7 +42,7 @@
 
 /* Sidebar styling */
 .sidebar {
-    width: 20vw; /* Fixed width */
+    width: 18vw; /* Fixed width */
     box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1); /* Box shadow */
     background-color: white; /* Light background color */
     padding-top: 30px;
@@ -55,7 +55,7 @@
 }
 /* Main content area to the right of the sidebar */
 .main-content.with-sidebar {
-    margin-left: 20vw; /* Offset content to the right of the sidebar */
+   margin-left: 18vw;
 }
 
 /* MarketingData content */

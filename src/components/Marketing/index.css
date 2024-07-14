@@ -1,9 +1,9 @@
 /* Container Styles */
-.marketingmain-content {
+.marketing-main-content {
     margin-top: -4px;
 }
 
-.marketingmain-top-container {
+.marketing-main-top-container {
     background-color: lightblue;
     padding: 20px;
     display: flex;
@@ -11,25 +11,26 @@
     margin-bottom: 20px;
 }
 
-.marketingmain-heading {
+.marketing-main-heading {
     font-family: "Roboto";
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 500;
 }
 
 /* Add Button */
-.marketingmain-heading-container {
+.marketing-main-heading-container {
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
 
-.marketingmain-add-button {
+.marketing-main-add-button {
     border: none;
     background-color: #007bff;
     color: white;
     border-radius: 8px;
-    padding: 10px 20px;
+    margin: 0px;
+    padding: 8px 15px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -37,41 +38,41 @@
     font-family: "Roboto";
 }
 
-.marketingmain-plus-logo {
+.marketing-main-plus-logo {
     font-size: 18px;
     margin-left: 5px;
 }
 
 /* Table Styles */
-.marketingmain-table {
+.marketing-main-table {
     width: 95%;
     border-collapse: collapse;
     margin: 20px;
     font-size: 14px;
 }
 
-.marketingmain-th,
-.marketingmain-td {
+.marketing-main-th,
+.marketing-main-td {
     padding: 10px;
     text-align: center;
 }
 
-.marketingmain-th {
+.marketing-main-th {
     background-color: rgb(0, 137, 183);
     color: white;
 }
 
-.marketingmain-tr:nth-child(odd) {
+.marketing-main-tr:nth-child(odd) {
     background-color: #f9f9f9;
     text-align: center;
 }
-.marketingmain-tr:nth-child(even) {
+.marketing-main-tr:nth-child(even) {
     background-color:lightgray;
     text-align: center;
 }
 
-.marketingmain-edit-button,
-.marketingmain-delete-button {
+.marketing-main-edit-button,
+.marketing-main-delete-button {
     border: none;
     background: none;
     cursor: pointer;
@@ -79,16 +80,16 @@
     margin-right: 10px;
 }
 
-.marketingmain-edit-button {
+.marketing-main-edit-button {
     color: blue;
 }
 
-.marketingmain-delete-button {
+.marketing-main-delete-button {
     color: #dc3545;
 }
 
 /* Popup Styles */
-.marketingmain-popup-overlay {
+.marketing-main-popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -101,7 +102,7 @@
     z-index: 1000;
 }
 
-.marketingmain-popup-form-container {
+.marketing-main-popup-form-container {
     background: white;
     padding: 20px;
     border-radius: 8px;
@@ -109,18 +110,18 @@
     max-width: 80%;
 }
 
-.marketingmain-form-heading {
+.marketing-main-form-heading {
     font-size: 18px;
     margin-bottom: 20px;
 }
 
-.marketingmain-form-label {
+.marketing-main-form-label {
     display: block;
     margin-bottom: 10px;
 }
 
-.marketingmain-form-input,
-.marketingmain-form-textarea {
+.marketing-main-form-input,
+.marketing-main-form-textarea {
     width: calc(100% - 20px);
     padding: 8px;
     margin-top: 5px;
@@ -129,17 +130,17 @@
     border: 1px solid #ccc;
 }
 
-.marketingmain-form-buttons {
+.marketing-main-form-buttons {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
 }
-.marketingmain-form-cancel-button {
+.marketing-main-form-cancel-button {
     margin-right: 240px;
 }
 
-.marketingmain-form-submit-button,
-.marketingmain-form-cancel-button {
+.marketing-main-form-submit-button,
+.marketing-main-form-cancel-button {
     border: none;
     padding: 10px 15px;
     border-radius: 4px;
@@ -148,30 +149,30 @@
     font-size: 14px;
 }
 
-.marketingmain-form-submit-button {
+.marketing-main-form-submit-button {
     background-color: #28a745;
     color: white;
 }
 
-.marketingmain-form-cancel-button {
+.marketing-main-form-cancel-button {
     background-color: #dc3545;
     color: white;
 }
 /* Delete Popup */
-.marketingmain-delete-popup {
+.marketing-main-delete-popup {
     background: white;
     padding: 20px;
     border-radius: 8px;
     text-align: center;
 }
 
-.marketingmain-delete-popup h2 {
+.marketing-main-delete-popup h2 {
     font-size: 18px;
     margin-bottom: 20px;
     font-family: "Roboto";
 }
 
-.marketingmain-delete-buttons {
+.marketing-main-delete-buttons {
     display: flex;
     justify-content: space-between;
 }
@@ -184,3 +185,31 @@
 .marketing-link-element {
     text-align: center;
 }
+
+/* Center loading spinner */
+.loading-spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Adjust as needed */
+  }
+  
+  /* Spinner animation */
+  .loading-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid #3498db;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

@@ -126,7 +126,7 @@ const Sidebar = ({ instituteName }) => {
           </div>
           {selectedOption === 'profile' && (
             <div className="dropdown-content">
-              <Link to={`/logout/${id}`} className='sidebar-options'>Logout</Link>
+              <Link to="/institutedashboard" className='sidebar-options'>Logout</Link>
             </div>
           )}
         </div>

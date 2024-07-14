@@ -1,29 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { FaPlus } from 'react-icons/fa6';
+import axios from 'axios';
+import { FaPlus } from 'react-icons/fa';
 import { AiTwotoneEdit } from 'react-icons/ai';
 import Sidebar from '../Sidebar';
 import { MdDeleteOutline } from 'react-icons/md';
-import './index.css'; // Ensure you have corresponding CSS
+import './index.css';
 
 const MarketingData = () => {
-  const { marketingname } = useParams();
+  useParams();
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [marketingItems, setMarketingItems] = useState([
-    { id: 1, name: 'Ramesh', number: '83958593', group: 'Group A' },
-    { id: 2, name: 'Siddharth', number: '987439500', group: 'Group B' },
-  ]);
+  const [marketingItem, setMarketingItem] = useState([]);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     number: '',
-    group: '',
+    group: ''
   });
-  const [selectedIds, setSelectedIds] = useState([]);
+
+  const fetchMarketingItem = useCallback(async () => {
+    try {
+      const response = await axios.get("https://admissionplusbackend.vercel.app/marketingdata");
+      setMarketingItem(response.data.result);
+    } catch (err) {
+      console.error(`Error fetching marketing item: ${err}`);
+      setMarketingItem([]); // Set marketingItem to empty array on error
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchMarketingItem();
+  }, [fetchMarketingItem]);
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -39,18 +50,22 @@ const MarketingData = () => {
     }));
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     const newItem = {
-      id: isEditMode ? editId : marketingItems.length + 1,
       name: formData.name,
       number: formData.number,
-      group: formData.group,
+      group: formData.group
     };
-    if (isEditMode) {
-      setMarketingItems(marketingItems.map(item => item.id === editId ? newItem : item));
-    } else {
-      setMarketingItems([...marketingItems, newItem]);
+    try {
+      if (isEditMode) {
+        await axios.put(`https://admissionplusbackend.vercel.app/marketingdata/${editId}`, newItem);
+      } else {
+        await axios.post('https://admissionplusbackend.vercel.app/marketingdata', newItem);
+      }
+      fetchMarketingItem();
+    } catch (err) {
+      console.error(`Error ${isEditMode ? 'updating' : 'adding'} marketing item: ${err}`);
     }
     setFormData({ name: '', number: '', group: '' });
     setIsPopupOpen(false);
@@ -58,18 +73,15 @@ const MarketingData = () => {
     setEditId(null);
   };
 
-  const handleEdit = (id) => {
-    const item = marketingItems.find(item => item.id === id);
-    if (item) {
-      setFormData({
-        name: item.name,
-        number: item.number,
-        group: item.group,
-      });
-      setIsPopupOpen(true);
-      setIsEditMode(true);
-      setEditId(id);
-    }
+  const handleEdit = (item) => {
+    setFormData({
+      name: item.name,
+      number: item.number,
+      group: item.group
+    });
+    setIsPopupOpen(true);
+    setIsEditMode(true);
+    setEditId(item._id);
   };
 
   const handleDeleteConfirmation = (id) => {
@@ -77,8 +89,13 @@ const MarketingData = () => {
     setShowDeleteConfirmation(true);
   };
 
-  const handleDelete = () => {
-    setMarketingItems(marketingItems.filter(item => item.id !== deleteId));
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`https://admissionplusbackend.vercel.app/marketingdata/${deleteId}`);
+      fetchMarketingItem();
+    } catch (err) {
+      console.error(`Error deleting marketing item: ${err}`);
+    }
     setShowDeleteConfirmation(false);
     setDeleteId(null);
   };
@@ -88,21 +105,13 @@ const MarketingData = () => {
     setDeleteId(null);
   };
 
-  const handleCheckboxChange = (id) => {
-    setSelectedIds(prevSelected => 
-      prevSelected.includes(id) 
-        ? prevSelected.filter(selectedId => selectedId !== id)
-        : [...prevSelected, id]
-    );
-  };
-
   return (
     <div className='marketingdata-container'>
-      <Sidebar/>
+      <Sidebar />
       <div className='marketingdata-top-container'>
-        <h1 className='marketingdata-heading'>{marketingname}</h1>
+        <h1 className='marketingdata-heading'>Marketing Campaign</h1>
         <div className='marketingdata-heading-container'>
-          <p>No.of Students : {marketingItems.length}</p>
+          <p>No. of Entries: {marketingItem.length}</p>
           <button className='marketingdata-add-button' onClick={togglePopup}>
             Add <FaPlus className='marketingdata-plus-logo' />
           </button>
@@ -162,7 +171,7 @@ const MarketingData = () => {
       {showDeleteConfirmation && (
         <div className='marketingdata-delete-popup-overlay'>
           <div className='marketingdata-delete-popup'>
-            <p>Are you sure you want to delete it?</p>
+            <p>Are you sure you want to delete this entry?</p>
             <div className='marketingdata-delete-buttons'>
               <button className='marketingdata-delete-no' onClick={handleCancelDelete}>No</button>
               <button className='marketingdata-delete-yes' onClick={handleDelete}>Yes</button>
@@ -171,7 +180,7 @@ const MarketingData = () => {
         </div>
       )}
 
-      {marketingItems.length > 0 && (
+      {marketingItem.length > 0 && (
         <table className='marketingdata-table'>
           <thead>
             <tr>
@@ -179,27 +188,19 @@ const MarketingData = () => {
               <th className='marketingdata-th'>Name</th>
               <th className='marketingdata-th'>Number</th>
               <th className='marketingdata-th'>Group</th>
-              <th className='marketingdata-th'>Select</th>
               <th className='marketingdata-th'>Action</th>
             </tr>
           </thead>
           <tbody>
-            {marketingItems.map((item, index) => (
-              <tr key={item.id} className='marketingdata-tr'>
+            {marketingItem.map((item, index) => (
+              <tr key={item._id} className='marketingdata-tr'>
                 <td className='marketingdata-td'>{index + 1}</td>
                 <td className='marketingdata-td'>{item.name}</td>
                 <td className='marketingdata-td'>{item.number}</td>
                 <td className='marketingdata-td'>{item.group}</td>
                 <td className='marketingdata-td'>
-                  <input 
-                    type='checkbox' 
-                    checked={selectedIds.includes(item.id)}
-                    onChange={() => handleCheckboxChange(item.id)}
-                  />
-                </td>
-                <td className='marketingdata-td'>
-                  <button className='marketingdata-edit-button' onClick={() => handleEdit(item.id)}><AiTwotoneEdit /></button>
-                  <button className='marketingdata-delete-button' onClick={() => handleDeleteConfirmation(item.id)}><MdDeleteOutline /></button>
+                  <button className='marketingdata-edit-button' onClick={() => handleEdit(item)}><AiTwotoneEdit /></button>
+                  <button className='marketingdata-delete-button' onClick={() => handleDeleteConfirmation(item._id)}><MdDeleteOutline /></button>
                 </td>
               </tr>
             ))}

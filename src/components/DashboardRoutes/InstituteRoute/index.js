@@ -72,6 +72,7 @@ const InstituteRoute = () => {
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
+    console.log(file)
     const imageUrl = await getUrl(file);
     console.log(imageUrl);
     setFormData((prev) => ({

@@ -12,7 +12,7 @@
   }
   
   .qrform-heading {
-    font-size: 24px;
+    font-size: 22px;
     color: #00796b;
     margin-bottom: 20px;
   }
@@ -121,8 +121,8 @@
         font-size: 22px;
     }
     .qr-institute-logo {
-        height: 50px;
-        width: 50px;
+        height: 60px;
+        width: 60px;
         border-radius: 50%;
     }
   }

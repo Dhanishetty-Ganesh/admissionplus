@@ -1,27 +1,37 @@
-import React, { useState } from 'react';
-import "./index.css";
-import { FaPlus} from 'react-icons/fa6';
+import React, { useState, useEffect } from 'react';
+import './index.css';
+import { FaPlus } from 'react-icons/fa';
 import { AiTwotoneEdit } from 'react-icons/ai';
-import { MdDeleteOutline } from "react-icons/md";
+import { MdDeleteOutline } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import Sidebar from '../Sidebar';
 
-
 const Marketing = () => {
-  const [data, setData] = useState([
-    { id: 1, dateTime: '2024-07-05 12:00 PM', name: 'Campaign 1', category: 'Social Media' },
-    { id: 2, dateTime: '2024-07-06 09:30 AM', name: 'Campaign 2', category: 'Email' },
-    { id: 3, dateTime: '2024-07-07 03:45 PM', name: 'Campaign 3', category: 'SEO' },
-    { id: 4, dateTime: '2024-07-08 11:15 AM', name: 'Campaign 4', category: 'Content Marketing' },
-    { id: 5, dateTime: '2024-07-09 05:00 PM', name: 'Campaign 5', category: 'PPC' },
-  ]);
-  
+  const [data, setData] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentEditId, setCurrentEditId] = useState(null);
   const [formData, setFormData] = useState({ name: '', category: '' });
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [headersVisible, setHeadersVisible] = useState(false); // State for showing headers
+  const [isLoading, setIsLoading] = useState(true); // State for loading indicator
+
+  useEffect(() => {
+    fetchMarketingCampaigns();
+  }, []);
+
+  const fetchMarketingCampaigns = async () => {
+    try {
+      const response = await axios.get('https://admissionplusbackend.vercel.app/marketing');
+      setData(response.data.result);
+      setIsLoading(false); // Set isLoading to false after data is fetched
+      setHeadersVisible(true); // Show headers after data is fetched
+    } catch (error) {
+      console.error('Error fetching marketing campaigns:', error.message);
+    }
+  };
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -42,122 +52,157 @@ const Marketing = () => {
     }));
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const newEntry = {
-      id: isEditMode ? currentEditId : data.length + 1,
-      dateTime: isEditMode ? data.find(item => item.id === currentEditId).dateTime : new Date().toLocaleString(),
-      name: formData.name,
-      category: formData.category,
-    };
-    if (isEditMode) {
-      setData(data.map(item => item.id === currentEditId ? newEntry : item));
-    } else {
-      setData([...data, newEntry]);
+    try {
+      const currentDate = new Date(); // Get current date and time
+      const formattedDate = currentDate.toISOString(); // Convert to ISO string format
+
+      const dataToSubmit = {
+        ...formData,
+        dateTime: formattedDate, // Include the current date and time
+      };
+
+      let response;
+      if (isEditMode) {
+        response = await axios.put(`https://admissionplusbackend.vercel.app/marketing/${currentEditId}`, dataToSubmit);
+        const updatedData = data.map(item => item._id === currentEditId ? { ...item, name: dataToSubmit.name, category: dataToSubmit.category } : item);
+        setData(updatedData);
+      } else {
+        response = await axios.post('https://admissionplusbackend.vercel.app/marketing', dataToSubmit);
+        setData([...data, response.data.result]);
+      }
+
+      // Set the dataToSubmit.dateTime to the response's dateTime value if available
+      if (response.data.result.dateTime) {
+        dataToSubmit.dateTime = response.data.result.dateTime;
+      }
+
+      togglePopup();
+    } catch (error) {
+      console.error('Error submitting form:', error.message);
     }
-    togglePopup();
   };
 
   const handleEdit = (id) => {
-    const entryToEdit = data.find(item => item.id === id);
+    const entryToEdit = data.find(item => item._id === id);
     setFormData({ name: entryToEdit.name, category: entryToEdit.category });
     setIsEditMode(true);
     setCurrentEditId(id);
     setIsPopupOpen(true);
   };
 
-  const handleDelete = () => {
-    setData(data.filter(item => item.id !== deleteId));
-    toggleDeletePopup();
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`https://admissionplusbackend.vercel.app/marketing/${deleteId}`);
+      setData(data.filter(item => item._id !== deleteId));
+      toggleDeletePopup();
+    } catch (error) {
+      console.error('Error deleting campaign:', error.message);
+    }
   };
 
   return (
-    <div className='marketingmain-content'>
-      <Sidebar/>
-      <div className='marketingmain-top-container'>
-        <h1 className='marketingmain-heading'>Voice(IVR) &gt; Marketing</h1>
-        <div className='marketingmain-heading-container'>
-          <button className='marketingmain-add-button' onClick={togglePopup}>
-              Add <FaPlus className='marketingmain-plus-logo' />
+    <div className='marketing-main-content'>
+      <Sidebar />
+      <div className='marketing-main-top-container'>
+        {headersVisible && (
+          <h1 className='marketing-main-heading'>Voice(IVR) &gt; Marketing</h1>
+        )}
+        <div className='marketing-main-heading-container'>
+          <button className='marketing-main-add-button' onClick={togglePopup}>
+            Add <FaPlus className='marketing-main-plus-logo' />
           </button>
         </div>
       </div>
 
-      {isPopupOpen && (
-        <div className='marketingmain-popup-overlay'>
-          <div className='marketingmain-popup-form-container'>
-            <form className='marketingmain-form' onSubmit={handleFormSubmit}>
-              <h2 className='marketingmain-form-heading'>{isEditMode ? 'Edit Marketing' : 'Add New Marketing'}</h2>
-              <label className='marketingmain-form-label'>
-                Marketing Name:
-                <input
-                  className='marketingmain-form-input'
-                  type='text'
-                  name='name'
-                  value={formData.name}
-                  onChange={handleFormChange}
-                  placeholder='Enter Marketing Name'
-                  required
-                />
-              </label>
-              <label className='marketingmain-form-label'>
-                Category:
-                <input
-                  className='marketingmain-form-input'
-                  type='text'
-                  name='category'
-                  value={formData.category}
-                  onChange={handleFormChange}
-                  placeholder='Enter Category'
-                  required
-                />
-              </label>
-              <div className='marketingmain-form-buttons'>
-                <button className='marketingmain-form-cancel-button' type='button' onClick={togglePopup}>Cancel</button>
-                <button className='marketingmain-form-submit-button' type='submit'>{isEditMode ? 'Update' : 'Submit'}</button>
+      {isLoading ? (
+        <div className='loading-spinner-container'>
+          <div className='loading-spinner'></div>
+        </div>
+      ) : (
+        <>
+          {isPopupOpen && (
+            <div className='marketing-main-popup-overlay'>
+              <div className='marketing-main-popup-form-container'>
+                <form className='marketing-main-form' onSubmit={handleFormSubmit}>
+                  <h2 className='marketing-main-form-heading'>{isEditMode ? 'Edit Marketing' : 'Add New Marketing'}</h2>
+                  <label className='marketing-main-form-label'>
+                    Marketing Name:
+                    <input
+                      className='marketing-main-form-input'
+                      type='text'
+                      name='name'
+                      value={formData.name}
+                      onChange={handleFormChange}
+                      placeholder='Enter Marketing Name'
+                      required
+                    />
+                  </label>
+                  <label className='marketing-main-form-label'>
+                    Category:
+                    <input
+                      className='marketing-main-form-input'
+                      type='text'
+                      name='category'
+                      value={formData.category}
+                      onChange={handleFormChange}
+                      placeholder='Enter Category'
+                      required
+                    />
+                  </label>
+                  <div className='marketing-main-form-buttons'>
+                    <button className='marketing-main-form-cancel-button' type='button' onClick={togglePopup}>Cancel</button>
+                    <button className='marketing-main-form-submit-button' type='submit'>{isEditMode ? 'Update' : 'Submit'}</button>
+                  </div>
+                </form>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-{isDeletePopupOpen && (
-    <div className='marketingmain-popup-overlay'>
-        <div className='marketingmain-delete-popup'>
-            <h2>Are you sure you want to delete?</h2>
-            <div className='marketingmain-delete-buttons'>
-                <button className='marketingmain-form-cancel-button' type='button' onClick={toggleDeletePopup}>No</button>
-                <button className='marketingmain-form-submit-button' type='button' onClick={handleDelete}>Yes</button>
             </div>
-        </div>
-    </div>
-)}
+          )}
 
-      <table className='marketingmain-table'>
-        <thead>
-          <tr>
-            <th className='marketingmain-th'>S.No</th>
-            <th className='marketingmain-th'>Date & Time</th>
-            <th className='marketingmain-th'>Marketing Name</th>
-            <th className='marketingmain-th'>Category</th>
-            <th className='marketingmain-th'>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, index) => (
-            <tr key={item.id} className='marketingmain-tr'>
-              <td className='marketingmain-td'>{index + 1}</td>
-              <td className='marketingmain-td'>{item.dateTime}</td>
-              <Link to = {`/marketing/${item.name}`} className='marketing-link-element'><td className='marketingmain-td marketing-linked-item'>{item.name}</td></Link> 
-              <td className='marketingmain-td'>{item.category}</td>
-      <td className='marketingmain-td'>
-                <button className='marketingmain-edit-button' onClick={() => handleEdit(item.id)}><AiTwotoneEdit /></button>
-                <button className='marketingmain-delete-button' onClick={() => toggleDeletePopup(item.id)}><MdDeleteOutline /></button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+          {isDeletePopupOpen && (
+            <div className='marketing-main-popup-overlay'>
+              <div className='marketing-main-delete-popup'>
+                <h2>Are you sure you want to delete?</h2>
+                <div className='marketing-main-delete-buttons'>
+                  <button className='marketing-main-form-cancel-button' type='button' onClick={toggleDeletePopup}>No</button>
+                  <button className='marketing-main-form-submit-button' type='button' onClick={handleDelete}>Yes</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {headersVisible && (
+            <table className='marketing-main-table'>
+              <thead>
+                <tr>
+                  <th className='marketing-main-th'>S.No</th>
+                  <th className='marketing-main-th'>Date & Time</th>
+                  <th className='marketing-main-th'>Marketing Name</th>
+                  <th className='marketing-main-th'>Category</th>
+                  <th className='marketing-main-th'>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((item, index) => (
+                  <tr key={item._id} className='marketing-main-tr'>
+                    <td className='marketing-main-td'>{index + 1}</td>
+                    <td className='marketing-main-td'>{new Date(item.dateTime).toLocaleString()}</td>
+                    <td className='marketing-main-td marketing-linked-item'>
+                    <Link to={`/marketing/${item._id}/${encodeURIComponent(item.name)}`} className='marketing-link-element'>{item.name}</Link>
+                    </td>
+                    <td className='marketing-main-td'>{item.category}</td>
+                    <td className='marketing-main-td'>
+                      <button className='marketing-main-edit-button' onClick={() => handleEdit(item._id)}><AiTwotoneEdit /></button>
+                      <button className='marketing-main-delete-button' onClick={() => toggleDeletePopup(item._id)}><MdDeleteOutline /></button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </>
+      )}
     </div>
   );
 }

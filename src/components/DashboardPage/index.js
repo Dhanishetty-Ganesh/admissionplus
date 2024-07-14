@@ -27,7 +27,7 @@ const DashboardPage = () => {
           <div className='bottom-buttons'>
             <Link to="/helpdashboard" className='left-side-button'><FaQuestionCircle className='icon' /> Help</Link>
             <Link to="/settingsdashboard" className='left-side-button'><FaCog className='icon' /> Settings</Link>
-            <Link to="/logout" className='left-side-button'><FaSignOutAlt className='icon' /> Logout</Link>
+            <Link to="/" className='left-side-button'><FaSignOutAlt className='icon' /> Logout</Link>
           </div>
         </div>
         
