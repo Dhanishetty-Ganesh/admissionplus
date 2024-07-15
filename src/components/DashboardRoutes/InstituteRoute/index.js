@@ -56,29 +56,36 @@ const InstituteRoute = () => {
   const getUrl = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
-
+  
     try {
-      const response = await fetch('https://admissionplusbackend.vercel.app/upload', {
-        method: "POST",
-        body: formData
+      const response = await axios.post('https://admissionplusbackend.vercel.app/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
-      const data = await response.json();
-      return data.Location;
+  
+      if (response.status !== 200) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+  
+      const data = response.data;
+      return data.data.Location; // Assuming the S3 URL is in data.Location
     } catch (error) {
       alert("File Upload Failed");
-      console.error('Error uploading file:', error.response ? error.response.data : error.message);
+      console.error('Error uploading file:', error.message);
     }
   };
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    console.log(file)
-    const imageUrl = await getUrl(file);
-    console.log(imageUrl);
-    setFormData((prev) => ({
-      ...prev,
-      logo: imageUrl
-    }));
+    if (file) {
+      const imageUrl = await getUrl(file);
+      console.log(imageUrl);
+      setFormData((prev) => ({
+        ...prev,
+        logo: imageUrl
+      }));
+    }
   };
 
   const handleFormSubmit = async (e) => {

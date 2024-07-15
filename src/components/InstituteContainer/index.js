@@ -33,7 +33,9 @@ const InstituteContainer = () => {
   }
 
   if (!institute) {
-    return <p>Error: Institute not found</p>;
+    return <p>Loading.........
+
+    </p>;
   }
 
   return (

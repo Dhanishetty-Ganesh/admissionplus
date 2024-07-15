@@ -58,13 +58,13 @@ const AudioClips = () => {
     formData.append('file', file);
 
     try {
-      const response = await fetch('https://admissionplusbackend.vercel.app/upload', {
-        method: "POST",
-        body: formData
+      const response = await axios.post('https://admissionplusbackend.vercel.app/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
-      const data = await response.json();
-      console.log('Uploaded file URL:', data.Location);
-      return data.Location;
+      console.log('Uploaded file URL:', response.data.data.Location);
+      return response.data.data.Location;
     } catch (error) {
       alert("File Upload Failed");
       console.error('Error uploading file:', error.response ? error.response.data : error.message);
@@ -86,13 +86,10 @@ const AudioClips = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     let audioFileUrl = formData.audioFileUrl;
-    console.log(audioFileUrl)
 
     if (formData.audioFile instanceof File && !audioFileUrl) {
       audioFileUrl = await getUrl(formData.audioFile);
     }
-
-    console.log('Final Audio file URL:', audioFileUrl);
 
     const formDataToSend = {
       voiceName: formData.voiceName,
@@ -100,8 +97,6 @@ const AudioClips = () => {
       description: formData.description,
       audioFileUrl: audioFileUrl,
     };
-
-    console.log('Form data to send:', formDataToSend);
 
     try {
       if (isEditMode) {
@@ -271,7 +266,6 @@ const AudioClips = () => {
               <th className="audioclips-th">Voice Name</th>
               <th className="audioclips-th">Voice ID</th>
               <th className="audioclips-th">Uploaded Voice</th>
-              <th className="audioclips-th">Duration</th>
               <th className="audioclips-th">Description</th>
               <th className="audioclips-th">Action</th>
             </tr>
@@ -288,18 +282,17 @@ const AudioClips = () => {
                     Your browser does not support the audio element.
                   </audio>
                 </td>
-                <td className="audioclips-td">{clip.duration ? clip.duration.toFixed(2) : 'N/A'} seconds</td>
                 <td className="audioclips-td">{clip.description}</td>
                 <td className="audioclips-td">
                   <div className="audioclips-actions">
                     <button
-                      className="audioclips-action-btn audioclips-edit-btn"
+                      className="audioclips-edit-button"
                       onClick={() => handleEdit(clip._id)}
                     >
                       <AiTwotoneEdit />
                     </button>
                     <button
-                      className="audioclips-action-btn audioclips-delete-btn"
+                      className="audioclips-action-button audioclips-delete-button"
                       onClick={() => handleDeleteConfirmation(clip._id)}
                     >
                       <MdDeleteOutline />
