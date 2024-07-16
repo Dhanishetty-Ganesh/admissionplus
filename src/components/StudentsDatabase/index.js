@@ -17,22 +17,50 @@ const StudentsDatabase = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [deleteGroupId, setDeleteGroupId] = useState(null);
-  const [studentsCount, setStudentsCount] = useState(0);
+
+  // Define studentsCount if needed for future use
+  // const [studentsCount, setStudentsCount] = useState(0);
 
   useEffect(() => {
-    fetchStudentsCount();
-  }, []);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-  const fetchStudentsCount = async () => {
-    try {
-      const response = await axios.get('https://admissionplusbackend.vercel.app/studentsdbgroupname');
-      console.log(response.length)
-      setStudentsCount(response.data.length);
-    } catch (error) {
-      console.error('Error loading student count:', error);
-      // Handle error as needed
-    }
-  };
+        const groupResponse = await axios.get('https://admissionplusbackend.vercel.app/groups');
+        const groups = groupResponse.data.result;
+
+        const updatedGroups = await Promise.all(groups.map(async (group) => {
+          try {
+            const usersResponse = await axios.get('https://admissionplusbackend.vercel.app/studentsdbgroupname');
+            const totalUsers = usersResponse.data.result.length || 0; // Access the 'result' array in the response
+            console.log(usersResponse.data);
+            return { ...group, totalUsers };
+          } catch (error) {
+            console.error(`Error fetching total users for group ${group._id}:`, error);
+            return { ...group, totalUsers: 0 };
+          }
+        }));
+
+        setGroupData(updatedGroups);
+        // If needed for UI display
+        // setStudentsCount(updateStudentsCount(updatedGroups));
+      } catch (error) {
+        console.error('Error loading groups:', error);
+        setError('Failed to load groups. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []); // Include fetchData in dependency array if needed
+
+  // Function to update students count if required
+  // const updateStudentsCount = (groups) => {
+  //   const totalCount = groups.reduce((acc, group) => acc + group.totalUsers, 0);
+  //   return totalCount;
+  // };
 
   const handleAddClick = () => {
     setShowPopup(true);
@@ -54,17 +82,14 @@ const StudentsDatabase = () => {
     if (formData.groupName && formData.category) {
       try {
         if (isEditing) {
-          console.log("Editing item with ID:", editGroupId); // Debugging line
-          const response = await axios.put(`https://admissionplusbackend.vercel.app/studentsdbgroupname/${editGroupId}`, formData);
-          console.log("Update response:", response.data); // Debugging line
-          setGroupData(groupData.map(item => item._id === editGroupId ? response.data.result : item));
+          const response = await axios.put(`https://admissionplusbackend.vercel.app/groups/${editGroupId}`, formData);
+          const updatedGroup = response.data.result;
+          setGroupData(groupData.map(item => item._id === editGroupId ? updatedGroup : item));
         } else {
-          console.log("Adding new item"); // Debugging line
-          const response = await axios.post('https://admissionplusbackend.vercel.app/studentsdbgroupname', formData);
-          console.log("Add response:", response.data); // Debugging line
-          setGroupData([...groupData, response.data.result]);
+          const response = await axios.post('https://admissionplusbackend.vercel.app/groups', formData);
+          const newGroup = response.data.result;
+          setGroupData([...groupData, newGroup]);
         }
-        fetchStudentsCount(); // Update student count after add/edit
       } catch (error) {
         console.error('Error saving group:', error);
         setError('Failed to save group. Please try again.');
@@ -75,7 +100,7 @@ const StudentsDatabase = () => {
     }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     setDeleteGroupId(id);
     setShowDeleteConfirmation(true);
   };
@@ -85,7 +110,8 @@ const StudentsDatabase = () => {
     setError(null);
     try {
       await axios.delete(`https://admissionplusbackend.vercel.app/groups/${deleteGroupId}`);
-      fetchStudentsCount(); // Update student count after delete
+      // If needed for UI update
+      // fetchData();
     } catch (error) {
       console.error('Error deleting group:', error);
       setError('Failed to delete group. Please try again.');
@@ -113,7 +139,7 @@ const StudentsDatabase = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
   return (
@@ -142,29 +168,30 @@ const StudentsDatabase = () => {
               </tr>
             </thead>
             <tbody>
-              {groupData.map((item, index) => (
-                <tr key={item._id} className="group-row">
-                  <td className="group-cell">{index + 1}</td>
-                  <td className="group-cell">
-                    <Link to={`/studentsdatabase/${item.groupName}`}>
-                      {item.groupName}
-                    </Link>
-                  </td>
-                  <td className="group-cell">{studentsCount}</td> {/* Display total students count */}
-                  <td className="group-cell">{item.category}</td>
-                  <td className="group-cell">
-                    <CiEdit
-                      className="group-icon group-icon-edit"
-                      onClick={() => handleEditClick(item._id)}
-                    />
-                    <MdDeleteOutline
-                      className="group-icon group-icon-delete"
-                      onClick={() => handleDelete(item._id)}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {groupData.map((item, index) => (
+    <tr key={item._id} className="group-row">
+      <td className="group-cell">{index + 1}</td>
+      <td className="group-cell">
+        <Link to={`/studentsdatabase/${item._id}`}>
+          {item.groupName}
+        </Link>
+      </td>
+      <td className="group-cell">{item.totalUsers}</td>
+      <td className="group-cell">{item.category}</td>
+      <td className="group-cell">
+        <CiEdit
+          className="group-icon group-icon-edit"
+          onClick={() => handleEditClick(item._id)}
+        />
+        <MdDeleteOutline
+          className="group-icon group-icon-delete"
+          onClick={() => handleDelete(item._id)}
+        />
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
         )}
 

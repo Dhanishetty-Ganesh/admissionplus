@@ -4,6 +4,7 @@ import { FaPlus } from 'react-icons/fa';
 import { AiTwotoneEdit } from 'react-icons/ai';
 import Sidebar from '../Sidebar';
 import { MdDeleteOutline } from 'react-icons/md';
+import { IoClose } from "react-icons/io5";
 import './index.css';
 
 const MarketingData = () => {
@@ -16,10 +17,13 @@ const MarketingData = () => {
   const [formData, setFormData] = useState({
     name: '',
     number: '',
-    group: ''
+    group: '',
+    libraryGroup: '' // Added for the group from library
   });
   const [voiceClips, setVoiceClips] = useState([]);
   const [selectedVoiceClip, setSelectedVoiceClip] = useState(null);
+  const [groupOptions, setGroupOptions] = useState([]);
+  const [groupEntries, setGroupEntries] = useState([]); // New state for group entries
   const audioRef = useRef(null);
 
   const fetchMarketingItem = useCallback(async () => {
@@ -42,15 +46,26 @@ const MarketingData = () => {
     }
   }, []);
 
+  const fetchGroupOptions = useCallback(async () => {
+    try {
+      const response = await axios.get('https://admissionplusbackend.vercel.app/studentsdbgroupname');
+      setGroupOptions(response.data.result); // Assuming the response directly contains group names
+    } catch (err) {
+      console.error(`Error fetching group options: ${err}`);
+      setGroupOptions([]); // Set groupOptions to empty array on error
+    }
+  }, []);
+
   useEffect(() => {
     fetchMarketingItem();
     fetchVoiceClips();
-  }, [fetchMarketingItem, fetchVoiceClips]);
+    fetchGroupOptions();
+  }, [fetchMarketingItem, fetchVoiceClips, fetchGroupOptions]);
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
     setIsEditMode(false);
-    setFormData({ name: '', number: '', group: '' });
+    setFormData({ name: '', number: '', group: '', libraryGroup: '' });
   };
 
   const handleFormChange = (e) => {
@@ -66,19 +81,21 @@ const MarketingData = () => {
     const newItem = {
       name: formData.name,
       number: formData.number,
-      group: formData.group
+      group: formData.group || formData.libraryGroup // Prioritize group if provided, otherwise use libraryGroup
     };
     try {
       if (isEditMode) {
         await axios.put(`https://admissionplusbackend.vercel.app/marketingdata/${editId}`, newItem);
+        const updatedItems = marketingItem.map(item => (item._id === editId ? newItem : item));
+        setMarketingItem(updatedItems);
       } else {
         await axios.post('https://admissionplusbackend.vercel.app/marketingdata', newItem);
+        setMarketingItem([...marketingItem, newItem]);
       }
-      fetchMarketingItem();
     } catch (err) {
       console.error(`Error ${isEditMode ? 'updating' : 'adding'} marketing item: ${err}`);
     }
-    setFormData({ name: '', number: '', group: '' });
+    setFormData({ name: '', number: '', group: '', libraryGroup: '' });
     setIsPopupOpen(false);
     setIsEditMode(false);
     setEditId(null);
@@ -88,7 +105,8 @@ const MarketingData = () => {
     setFormData({
       name: item.name,
       number: item.number,
-      group: item.group
+      group: item.group,
+      libraryGroup: '' // Clear library group on edit
     });
     setIsPopupOpen(true);
     setIsEditMode(true);
@@ -103,7 +121,8 @@ const MarketingData = () => {
   const handleDelete = async () => {
     try {
       await axios.delete(`https://admissionplusbackend.vercel.app/marketingdata/${deleteId}`);
-      fetchMarketingItem();
+      const updatedItems = marketingItem.filter(item => item._id !== deleteId);
+      setMarketingItem(updatedItems);
     } catch (err) {
       console.error(`Error deleting marketing item: ${err}`);
     }
@@ -121,6 +140,26 @@ const MarketingData = () => {
     const clip = voiceClips.find(clip => clip._id === selectedClipId);
     setSelectedVoiceClip(clip);
   };
+  const handleAddGroup = () => {
+    const newGroupEntry = {
+      name: formData.name,
+      number: formData.number,
+      group: formData.libraryGroup
+    };
+  
+    // Perform validation or checks as needed before adding
+    if (formData.name && formData.number && formData.libraryGroup) {
+      setGroupEntries([...groupEntries, newGroupEntry]);
+  
+      // Clear the form fields after adding
+      setFormData({ name: '', number: '', group: '', libraryGroup: '' });
+    } else {
+      console.error("Please fill in all fields before adding.");
+      // Optionally, you can display an error message or handle validation differently
+    }
+  };
+  
+  
 
   useEffect(() => {
     if (audioRef.current) {
@@ -173,6 +212,9 @@ const MarketingData = () => {
       {isPopupOpen && (
         <div className='marketingdata-popup-overlay'>
           <div className='marketingdata-popup-form-container'>
+            <div className='close-mark-container'>
+              <IoClose className='close-mark' onClick={togglePopup}/>
+            </div>
             <form className='marketingdata-form' onSubmit={handleFormSubmit}>
               <h2 className='marketingdata-form-heading'>{isEditMode ? 'Edit Data' : 'Add New Data'}</h2>
               <label className='marketingdata-form-label'>
@@ -208,12 +250,28 @@ const MarketingData = () => {
                   value={formData.group}
                   onChange={handleFormChange}
                   placeholder='Enter Group'
-                  required
                 />
               </label>
               <div className='marketingdata-form-buttons'>
-                <button className='marketingdata-form-cancel-button' type='button' onClick={togglePopup}>Cancel</button>
                 <button className='marketingdata-form-submit-button' type='submit'>Submit</button>
+              </div>
+
+              <div className='addagroup-container'>
+                <h1 className='add-a-group-heading'>Add a Group</h1>
+                <select
+                  name="libraryGroup"
+                  className="voice-library-select"
+                  onChange={handleFormChange}
+                  value={formData.libraryGroup}
+                >
+                  <option value="">Choose from Library</option>
+                  {groupOptions.map((group) => (
+                    <option key={group._id} value={group.name}>
+                      {group.name}
+                    </option>
+                  ))}
+                </select>
+                <button className='add-group-button' onClick={handleAddGroup}>Add Group</button>
               </div>
             </form>
           </div>
@@ -253,6 +311,18 @@ const MarketingData = () => {
                 <td className='marketingdata-td'>
                   <button className='marketingdata-edit-button' onClick={() => handleEdit(item)}><AiTwotoneEdit /></button>
                   <button className='marketingdata-delete-button' onClick={() => handleDeleteConfirmation(item._id)}><MdDeleteOutline /></button>
+                </td>
+              </tr>
+            ))}
+            {/* Display added group entries */}
+            {groupEntries.map((entry, index) => (
+              <tr key={index} className='marketingdata-tr'>
+                <td className='marketingdata-td'>{marketingItem.length + index + 1}</td>
+                <td className='marketingdata-td'>{entry.name}</td>
+                <td className='marketingdata-td'>{entry.number}</td>
+                <td className='marketingdata-td'>{entry.group}</td>
+                <td className='marketingdata-td'>
+                  {/* You can add actions for these entries if needed */}
                 </td>
               </tr>
             ))}
