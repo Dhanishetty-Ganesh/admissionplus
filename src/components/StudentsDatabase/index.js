@@ -27,10 +27,23 @@ const StudentsDatabase = () => {
     setError(null);
     try {
       const response = await axios.get('https://admissionplusbackend.vercel.app/groups');
-      setGroupData(response.data.result);
+      const groups = response.data.result;
+
+      // Fetch total users for each group
+      const updatedGroups = await Promise.all(groups.map(async (group) => {
+        try {
+          const usersResponse = await axios.get(`https://admissionplusbackend.vercel.app/marketingdatagroupname/${group.groupName}/totalUsers`);
+          return { ...group, totalUsers: usersResponse.data.totalUsers || 0 };
+        } catch (error) {
+          console.error(`Error fetching total users for group ${group._id}:`, error);
+          return { ...group, totalUsers: 0 };
+        }
+      }));
+
+      setGroupData(updatedGroups);
     } catch (error) {
-      console.error('Error fetching groups:', error);
-      setError('Failed to fetch groups. Please try again.');
+      console.error('Error loading groups:', error);
+      setError('Failed to load groups. Please refresh the page or try again later.');
     } finally {
       setLoading(false);
     }
@@ -56,14 +69,20 @@ const StudentsDatabase = () => {
     if (formData.groupName && formData.category) {
       try {
         if (isEditing) {
-          await axios.put(`https://admissionplusbackend.vercel.app/groups/${editGroupId}`, formData);
+          console.log("Editing item with ID:", editGroupId); // Debugging line
+          const response = await axios.put(`https://admissionplusbackend.vercel.app/studentsdbgroupname/${editGroupId}`, formData);
+          console.log("Update response:", response.data); // Debugging line
+          setGroupData(groupData.map(item => item._id === editGroupId ? response.data.result : item));
         } else {
-          await axios.post('https://admissionplusbackend.vercel.app/groups', formData);
+          console.log("Adding new item"); // Debugging line
+          const response = await axios.post('https://admissionplusbackend.vercel.app/studentsdbgroupname', formData);
+          console.log("Add response:", response.data); // Debugging line
+          setGroupData([...groupData, response.data.result]);
         }
         fetchGroups();
       } catch (error) {
-        console.error('Loading:', error);
-        setError('Loading...');
+        console.error('Error saving group:', error);
+        setError('Failed to save group. Please try again.');
       } finally {
         setLoading(false);
         handleCloseClick();
@@ -142,12 +161,11 @@ const StudentsDatabase = () => {
                 <tr key={item._id} className="group-row">
                   <td className="group-cell">{index + 1}</td>
                   <td className="group-cell">
-                  <Link to={`/studentsdatabase/${item.groupName}`}>
-  {item.groupName}
-</Link>
-
+                    <Link to={`/studentsdatabase/${item.groupName}`}>
+                      {item.groupName}
+                    </Link>
                   </td>
-                  <td className="group-cell">{item.totalUsers}</td>
+                  <td className="group-cell">{item.totalUsers !== 'N/A' ? item.totalUsers : 0}</td>
                   <td className="group-cell">{item.category}</td>
                   <td className="group-cell">
                     <CiEdit

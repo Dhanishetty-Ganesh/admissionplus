@@ -28,9 +28,7 @@ const StudentsDatabaseGroupName = () => {
       .then(response => {
         setStudentsItems(response.data.result);
       })
-      .catch(error => {
-        console.error('Error fetching students:', error);
-      });
+      
   }, []);
 
   const togglePopup = () => {
@@ -78,7 +76,7 @@ const StudentsDatabaseGroupName = () => {
           resetForm();
         })
         .catch(error => {
-          console.error('Error adding student:', error);
+          console.error('Loading...', error);
         });
     }
   };
@@ -208,7 +206,6 @@ const StudentsDatabaseGroupName = () => {
       )}
 
       {showDeleteConfirmation && (
-        <div className='studentsdatabasegroupname-popup-overlay'>
           <div className='studentsdatabasegroupname-delete-confirmation'>
             <p>Are you sure you want to delete this student?</p>
             <div className='studentsdatabasegroupname-delete-buttons'>
@@ -220,7 +217,6 @@ const StudentsDatabaseGroupName = () => {
               </button>
             </div>
           </div>
-        </div>
       )}
 
 <table className='studentsdatabasegroupname-table'>
