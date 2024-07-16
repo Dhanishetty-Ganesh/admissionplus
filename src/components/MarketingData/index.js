@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { FaPlus } from 'react-icons/fa';
 import { AiTwotoneEdit } from 'react-icons/ai';
@@ -8,8 +7,6 @@ import { MdDeleteOutline } from 'react-icons/md';
 import './index.css';
 
 const MarketingData = () => {
-  useParams();
-
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -21,6 +18,9 @@ const MarketingData = () => {
     number: '',
     group: ''
   });
+  const [voiceClips, setVoiceClips] = useState([]);
+  const [selectedVoiceClip, setSelectedVoiceClip] = useState(null);
+  const audioRef = useRef(null);
 
   const fetchMarketingItem = useCallback(async () => {
     try {
@@ -32,9 +32,20 @@ const MarketingData = () => {
     }
   }, []);
 
+  const fetchVoiceClips = useCallback(async () => {
+    try {
+      const response = await axios.get("https://admissionplusbackend.vercel.app/audioclips");
+      setVoiceClips(response.data.result); // Assuming the response directly contains voice clips
+    } catch (err) {
+      console.error(`Error fetching voice clips: ${err}`);
+      setVoiceClips([]); // Set voiceClips to empty array on error
+    }
+  }, []);
+
   useEffect(() => {
     fetchMarketingItem();
-  }, [fetchMarketingItem]);
+    fetchVoiceClips();
+  }, [fetchMarketingItem, fetchVoiceClips]);
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -105,6 +116,19 @@ const MarketingData = () => {
     setDeleteId(null);
   };
 
+  const handleVoiceClipSelect = (event) => {
+    const selectedClipId = event.target.value;
+    const clip = voiceClips.find(clip => clip._id === selectedClipId);
+    setSelectedVoiceClip(clip);
+  };
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.load();
+    }
+  }, [selectedVoiceClip]);
+
   return (
     <div className='marketingdata-container'>
       <Sidebar />
@@ -116,6 +140,34 @@ const MarketingData = () => {
             Add <FaPlus className='marketingdata-plus-logo' />
           </button>
         </div>
+      </div>
+      <div className='voice-message-containers-flex'>
+        <div className='voicemessagecontainer'>
+          <h1 className='voice-message-heading'>Voice Message</h1>
+          <select
+            name="voiceLibrary"
+            id="voiceLibrary"
+            className="voice-library-select"
+            onChange={handleVoiceClipSelect}
+            value={selectedVoiceClip ? selectedVoiceClip._id : ""}
+          >
+            <option value="">Select Voice Clip</option>
+            {voiceClips.map((clip) => (
+              <option key={clip._id} value={clip._id}>
+                {clip.voiceName}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {selectedVoiceClip && (
+          <div className="audio-player-container">
+            <audio controls ref={audioRef}>
+              <source src={selectedVoiceClip.audioFileUrl} type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        )}
       </div>
 
       {isPopupOpen && (

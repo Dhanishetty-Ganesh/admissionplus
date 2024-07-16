@@ -17,35 +17,20 @@ const StudentsDatabase = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [deleteGroupId, setDeleteGroupId] = useState(null);
+  const [studentsCount, setStudentsCount] = useState(0);
 
   useEffect(() => {
-    fetchGroups();
+    fetchStudentsCount();
   }, []);
 
-  const fetchGroups = async () => {
-    setLoading(true);
-    setError(null);
+  const fetchStudentsCount = async () => {
     try {
-      const response = await axios.get('https://admissionplusbackend.vercel.app/groups');
-      const groups = response.data.result;
-
-      // Fetch total users for each group
-      const updatedGroups = await Promise.all(groups.map(async (group) => {
-        try {
-          const usersResponse = await axios.get(`https://admissionplusbackend.vercel.app/marketingdatagroupname/${group.groupName}/totalUsers`);
-          return { ...group, totalUsers: usersResponse.data.totalUsers || 0 };
-        } catch (error) {
-          console.error(`Error fetching total users for group ${group._id}:`, error);
-          return { ...group, totalUsers: 0 };
-        }
-      }));
-
-      setGroupData(updatedGroups);
+      const response = await axios.get('https://admissionplusbackend.vercel.app/studentsdbgroupname');
+      console.log(response.length)
+      setStudentsCount(response.data.length);
     } catch (error) {
-      console.error('Error loading groups:', error);
-      setError('Failed to load groups. Please refresh the page or try again later.');
-    } finally {
-      setLoading(false);
+      console.error('Error loading student count:', error);
+      // Handle error as needed
     }
   };
 
@@ -79,7 +64,7 @@ const StudentsDatabase = () => {
           console.log("Add response:", response.data); // Debugging line
           setGroupData([...groupData, response.data.result]);
         }
-        fetchGroups();
+        fetchStudentsCount(); // Update student count after add/edit
       } catch (error) {
         console.error('Error saving group:', error);
         setError('Failed to save group. Please try again.');
@@ -100,7 +85,7 @@ const StudentsDatabase = () => {
     setError(null);
     try {
       await axios.delete(`https://admissionplusbackend.vercel.app/groups/${deleteGroupId}`);
-      fetchGroups();
+      fetchStudentsCount(); // Update student count after delete
     } catch (error) {
       console.error('Error deleting group:', error);
       setError('Failed to delete group. Please try again.');
@@ -165,7 +150,7 @@ const StudentsDatabase = () => {
                       {item.groupName}
                     </Link>
                   </td>
-                  <td className="group-cell">{item.totalUsers !== 'N/A' ? item.totalUsers : 0}</td>
+                  <td className="group-cell">{studentsCount}</td> {/* Display total students count */}
                   <td className="group-cell">{item.category}</td>
                   <td className="group-cell">
                     <CiEdit
