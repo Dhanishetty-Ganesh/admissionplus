@@ -194,11 +194,12 @@ const StudentsDatabaseGroupName = () => {
                 />
               </label>
               <div className='studentsdatabasegroupname-popup-buttons'>
-                <button className='studentsdatabasegroupname-popup-submit' type='submit'>
-                  {isEditMode ? 'Save' : 'Submit'}
-                </button>
+                
                 <button className='studentsdatabasegroupname-popup-cancel' type='button' onClick={togglePopup}>
                   Cancel
+                </button>
+                <button className='studentsdatabasegroupname-popup-submit' type='submit'>
+                  {isEditMode ? 'Save' : 'Submit'}
                 </button>
               </div>
             </form>
@@ -222,31 +223,44 @@ const StudentsDatabaseGroupName = () => {
         </div>
       )}
 
-      <div className='studentsdatabasegroupname-list'>
-        {studentsItems.map((item) => (
-          <div className='studentsdatabasegroupname-card' key={item._id}>
-            <p>Date/Time: {item.datetime}</p>
-            <p>Name: {item.name}</p>
-            <p>Number: {item.number}</p>
-            <p>Email: {item.email}</p>
-            <p>Details: {item.details}</p>
-            <div className='studentsdatabasegroupname-card-buttons'>
-              <button
-                className='studentsdatabasegroupname-card-edit'
-                onClick={() => handleEdit(item._id)}
-              >
-                <AiTwotoneEdit />
-              </button>
-              <button
-                className='studentsdatabasegroupname-card-delete'
-                onClick={() => handleDeleteConfirmation(item._id)}
-              >
-                <MdDeleteOutline />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+<table className='studentsdatabasegroupname-table'>
+  <thead>
+    <tr className='studentsdatabasegroupname-tr'>
+      <th className='studentsdatabasegroupname-th'>Date/Time</th>
+      <th className='studentsdatabasegroupname-th'>Name</th>
+      <th className='studentsdatabasegroupname-th'>Number</th>
+      <th className='studentsdatabasegroupname-th'>Email</th>
+      <th className='studentsdatabasegroupname-th'>Details</th>
+      <th className='studentsdatabasegroupname-th'>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {studentsItems.map((item) => (
+      <tr className='studentsdatabasegroupname-tr' key={item._id}>
+        <td className='studentsdatabasegroupname-td'>{item.datetime}</td>
+        <td className='studentsdatabasegroupname-td'>{item.name}</td>
+        <td className='studentsdatabasegroupname-td'>{item.number}</td>
+        <td className='studentsdatabasegroupname-td'>{item.email}</td>
+        <td className='studentsdatabasegroupname-td'>{item.details}</td>
+        <td className='studentsdatabasegroupname-td'>
+          <button
+            className='studentsdatabasegroupname-edit-button'
+            onClick={() => handleEdit(item._id)}
+          >
+            <AiTwotoneEdit />
+          </button>
+          <button
+            className='studentsdatabasegroupname-delete-button'
+            onClick={() => handleDeleteConfirmation(item._id)}
+          >
+            <MdDeleteOutline />
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
     </div>
   );
 };
