@@ -1,22 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { FaPlus } from 'react-icons/fa6';
+import axios from 'axios';
+import { FaPlus } from 'react-icons/fa';
 import { AiTwotoneEdit } from 'react-icons/ai';
 import Sidebar from '../Sidebar';
 import { MdDeleteOutline } from 'react-icons/md';
-import './index.css'; // Ensure you have corresponding CSS
+import './index.css';
 
 const StudentsDatabaseGroupName = () => {
   const { groupname } = useParams();
-
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [studentsItems, setStudentsItems] = useState([
-    { id: 1, datetime: '2023-07-01 14:30', name: 'John', number: '1234567890', email: 'john@example.com', details: 'Sample details' },
-    { id: 2, datetime: '2023-07-02 10:15', name: 'Rakesh', number: '9876543210', email: 'rakesh@example.com', details: 'Another sample detail' },
-    { id: 3, datetime: '2023-07-02 10:15', name: 'Soumith', number: '9052953095', email: 'soumith123@example.com', details: 'Another detail' },
-  ]);
+  const [studentsItems, setStudentsItems] = useState([]);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [formData, setFormData] = useState({
@@ -25,6 +21,17 @@ const StudentsDatabaseGroupName = () => {
     email: '',
     details: '',
   });
+
+  useEffect(() => {
+    // Fetch all students on component mount
+    axios.get('https://admissionplusbackend.vercel.app/studentsdbgroupname')
+      .then(response => {
+        setStudentsItems(response.data.result);
+      })
+      .catch(error => {
+        console.error('Error fetching students:', error);
+      });
+  }, []);
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -42,19 +49,41 @@ const StudentsDatabaseGroupName = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    console.log("Form submitted");  // Debugging line
     const newItem = {
-      id: isEditMode ? editId : studentsItems.length + 1,
-      datetime: new Date().toISOString().replace('T', ' ').slice(0, 16), // Current date and time
+      datetime: new Date().toISOString().replace('T', ' ').slice(0, 16),
       name: formData.name,
       number: formData.number,
       email: formData.email,
       details: formData.details,
     };
+
     if (isEditMode) {
-      setStudentsItems(studentsItems.map(item => item.id === editId ? newItem : item));
+      console.log("Editing item with ID:", editId);  // Debugging line
+      axios.put(`https://admissionplusbackend.vercel.app/studentsdbgroupname/${editId}`, newItem)
+        .then(response => {
+          console.log("Update response:", response.data);  // Debugging line
+          setStudentsItems(studentsItems.map(item => item._id === editId ? response.data.result : item));
+          resetForm();
+        })
+        .catch(error => {
+          console.error('Error updating student:', error);
+        });
     } else {
-      setStudentsItems([...studentsItems, newItem]);
+      console.log("Adding new item");  // Debugging line
+      axios.post('https://admissionplusbackend.vercel.app/studentsdbgroupname', newItem)
+        .then(response => {
+          console.log("Add response:", response.data);  // Debugging line
+          setStudentsItems([...studentsItems, response.data.result]);
+          resetForm();
+        })
+        .catch(error => {
+          console.error('Error adding student:', error);
+        });
     }
+  };
+
+  const resetForm = () => {
     setFormData({ name: '', number: '', email: '', details: '' });
     setIsPopupOpen(false);
     setIsEditMode(false);
@@ -62,7 +91,7 @@ const StudentsDatabaseGroupName = () => {
   };
 
   const handleEdit = (id) => {
-    const item = studentsItems.find(item => item.id === id);
+    const item = studentsItems.find(item => item._id === id);
     if (item) {
       setFormData({
         name: item.name,
@@ -82,9 +111,15 @@ const StudentsDatabaseGroupName = () => {
   };
 
   const handleDelete = () => {
-    setStudentsItems(studentsItems.filter(item => item.id !== deleteId));
-    setShowDeleteConfirmation(false);
-    setDeleteId(null);
+    axios.delete(`https://admissionplusbackend.vercel.app/studentsdbgroupname/${deleteId}`)
+      .then(() => {
+        setStudentsItems(studentsItems.filter(item => item._id !== deleteId));
+        setShowDeleteConfirmation(false);
+        setDeleteId(null);
+      })
+      .catch(error => {
+        console.error('Error deleting student:', error);
+      });
   };
 
   const handleCancelDelete = () => {
@@ -123,14 +158,14 @@ const StudentsDatabaseGroupName = () => {
                 />
               </label>
               <label className='studentsdatabasegroupname-form-label'>
-                Mobile Number:
+                Number:
                 <input
                   className='studentsdatabasegroupname-form-input'
                   type='text'
                   name='number'
                   value={formData.number}
                   onChange={handleFormChange}
-                  placeholder='Enter Mobile Number'
+                  placeholder='Enter Number'
                   required
                 />
               </label>
@@ -148,8 +183,9 @@ const StudentsDatabaseGroupName = () => {
               </label>
               <label className='studentsdatabasegroupname-form-label'>
                 Details:
-                <textarea
-                  className='studentsdatabasegroupname-form-textarea'
+                <input
+                  className='studentsdatabasegroupname-form-input'
+                  type='text'
                   name='details'
                   value={formData.details}
                   onChange={handleFormChange}
@@ -157,9 +193,13 @@ const StudentsDatabaseGroupName = () => {
                   required
                 />
               </label>
-              <div className='studentsdatabasegroupname-form-buttons'>
-                <button className='studentsdatabasegroupname-form-cancel-button' type='button' onClick={togglePopup}>Cancel</button>
-                <button className='studentsdatabasegroupname-form-submit-button' type='submit'>Submit</button>
+              <div className='studentsdatabasegroupname-popup-buttons'>
+                <button className='studentsdatabasegroupname-popup-submit' type='submit'>
+                  {isEditMode ? 'Save' : 'Submit'}
+                </button>
+                <button className='studentsdatabasegroupname-popup-cancel' type='button' onClick={togglePopup}>
+                  Cancel
+                </button>
               </div>
             </form>
           </div>
@@ -167,48 +207,46 @@ const StudentsDatabaseGroupName = () => {
       )}
 
       {showDeleteConfirmation && (
-        <div className='studentsdatabasegroupname-delete-popup-overlay'>
-          <div className='studentsdatabasegroupname-delete-popup'>
-            <p>Are you sure you want to delete it?</p>
+        <div className='studentsdatabasegroupname-popup-overlay'>
+          <div className='studentsdatabasegroupname-delete-confirmation'>
+            <p>Are you sure you want to delete this student?</p>
             <div className='studentsdatabasegroupname-delete-buttons'>
-              <button className='studentsdatabasegroupname-delete-no' onClick={handleCancelDelete}>No</button>
-              <button className='studentsdatabasegroupname-delete-yes' onClick={handleDelete}>Yes</button>
+              <button className='studentsdatabasegroupname-delete-yes' onClick={handleDelete}>
+                Yes
+              </button>
+              <button className='studentsdatabasegroupname-delete-no' onClick={handleCancelDelete}>
+                No
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {studentsItems.length > 0 && (
-        <table className='studentsdatabasegroupname-table'>
-          <thead>
-            <tr>
-              <th className='studentsdatabasegroupname-th'>S.No</th>
-              <th className='studentsdatabasegroupname-th'>Date & Time</th>
-              <th className='studentsdatabasegroupname-th'>Name</th>
-              <th className='studentsdatabasegroupname-th'>Mobile Number</th>
-              <th className='studentsdatabasegroupname-th'>Email</th>
-              <th className='studentsdatabasegroupname-th'>Details</th>
-              <th className='studentsdatabasegroupname-th'>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {studentsItems.map((item, index) => (
-              <tr key={item.id} className='studentsdatabasegroupname-tr'>
-                <td className='studentsdatabasegroupname-td'>{index + 1}</td>
-                <td className='studentsdatabasegroupname-td'>{item.datetime}</td>
-                <td className='studentsdatabasegroupname-td'>{item.name}</td>
-                <td className='studentsdatabasegroupname-td'>{item.number}</td>
-                <td className='studentsdatabasegroupname-td'>{item.email}</td>
-                <td className='studentsdatabasegroupname-td'>{item.details}</td>
-                <td className='studentsdatabasegroupname-td'>
-                  <button className='studentsdatabasegroupname-edit-button' onClick={() => handleEdit(item.id)}><AiTwotoneEdit /></button>
-                  <button className='studentsdatabasegroupname-delete-button' onClick={() => handleDeleteConfirmation(item.id)}><MdDeleteOutline /></button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      <div className='studentsdatabasegroupname-list'>
+        {studentsItems.map((item) => (
+          <div className='studentsdatabasegroupname-card' key={item._id}>
+            <p>Date/Time: {item.datetime}</p>
+            <p>Name: {item.name}</p>
+            <p>Number: {item.number}</p>
+            <p>Email: {item.email}</p>
+            <p>Details: {item.details}</p>
+            <div className='studentsdatabasegroupname-card-buttons'>
+              <button
+                className='studentsdatabasegroupname-card-edit'
+                onClick={() => handleEdit(item._id)}
+              >
+                <AiTwotoneEdit />
+              </button>
+              <button
+                className='studentsdatabasegroupname-card-delete'
+                onClick={() => handleDeleteConfirmation(item._id)}
+              >
+                <MdDeleteOutline />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

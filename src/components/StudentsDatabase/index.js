@@ -62,8 +62,8 @@ const StudentsDatabase = () => {
         }
         fetchGroups();
       } catch (error) {
-        console.error('Error submitting form:', error);
-        setError('Failed to submit form. Please try again.');
+        console.error('Loading:', error);
+        setError('Loading...');
       } finally {
         setLoading(false);
         handleCloseClick();
@@ -142,9 +142,10 @@ const StudentsDatabase = () => {
                 <tr key={item._id} className="group-row">
                   <td className="group-cell">{index + 1}</td>
                   <td className="group-cell">
-                    <Link to={`/studentsdatabase/groupname/${item.groupName}`}>
-                      {item.groupName}
-                    </Link>
+                  <Link to={`/studentsdatabase/${item.groupName}`}>
+  {item.groupName}
+</Link>
+
                   </td>
                   <td className="group-cell">{item.totalUsers}</td>
                   <td className="group-cell">{item.category}</td>
