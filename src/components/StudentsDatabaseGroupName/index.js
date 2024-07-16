@@ -5,7 +5,7 @@ import { FaPlus } from 'react-icons/fa';
 import { AiTwotoneEdit } from 'react-icons/ai';
 import Sidebar from '../Sidebar';
 import { MdDeleteOutline } from 'react-icons/md';
-import './index.css';
+import './index.css'; // Import your CSS file
 
 const StudentsDatabaseGroupName = () => {
   const { groupname } = useParams();
