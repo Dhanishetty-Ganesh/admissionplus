@@ -260,7 +260,7 @@ const MarketingData = () => {
                 <h1 className='add-a-group-heading'>Add a Group</h1>
                 <select
                   name="libraryGroup"
-                  className="voice-library-select"
+                  className="group-library-select"
                   onChange={handleFormChange}
                   value={formData.libraryGroup}
                 >

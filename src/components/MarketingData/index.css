@@ -81,13 +81,13 @@
 .marketingdata-form-label {
     margin-bottom: 10px;
     font-family: "Roboto";
-    font-size: 16px;
+    font-size: 15px;
 }
 
 .marketingdata-form-input,
 .marketingdata-form-textarea {
     width: 96%;
-    padding: 10px;
+    padding: 6px;
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -238,6 +238,13 @@
     font-family: "Roboto";
     font-size: 14px;
   }
+  .group-library-select {
+    width: 40%;
+    border-radius: 6px;
+    padding: 4px;
+    font-family: "Roboto";
+    font-size: 14px;
+  }
   
   .audio-player-container {
     margin-top: 50px;
@@ -281,29 +288,34 @@
   }
 
 .add-a-group-heading {
-    
+    font-size: 23px;
 }
 .addagroup-container {
     display: flex;
     flex-direction: column;
 }
 .add-group-button{
-    padding: 8px 16px;
+    padding: 6px 10px;
     font-size: 1rem;
+    margin-top: 20px;
+    font-size: 16px;
     cursor: pointer;
     background-color: #007bff;
     color: #fff;
     border: none;
-    border-radius: 4px;
-    width: 200px;
+    border-radius: 8px;
+    width: 110px;
 }
 .close-mark {
    font-size: 24px;
    cursor: pointer;
    font-weight: bold;
+   
 }
 .close-mark-container {
     width: 100%;
     display: flex;
     justify-content: end;
+    margin: 0px;
+   padding: 0px;
 }
