@@ -97,8 +97,8 @@
   }
   
   .credit-table-header {
-    background-color: lightblue;
-    color: black;
+    background-color: rgba(15, 9, 9, 0.644);
+    color: white;
   }
   
   .credit-table-header-cell {

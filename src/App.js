@@ -18,6 +18,7 @@ import CoursesInstitute from './components/InstitutesRoutes/CoursesInstitute';
 import RegistrationStudents from './components/RegistrationStudents';
 import InstituteRoute from './components/DashboardRoutes/InstituteRoute'; // Corrected path
 import InfoInstitute from './components/InstitutesRoutes/InfoInstitute';
+import HistoryCreditsComponent from './components/InstitutesRoutes/HistoryCreditsComponent';
 import QRCodeForm from './components/InstitutesRoutes/QRCodeForm';
 import './App.css';
 
@@ -55,6 +56,7 @@ const AppContent = () => {
           <Route path="/infoinstitute/:id" element={<InfoInstitute />} />
           <Route path="/coursesinstitute/:id" element={<CoursesInstitute />} />
           <Route path="/registrationstudents/:id" element={<RegistrationStudents />} />
+          <Route path="/historycredits/:id" element={<HistoryCreditsComponent />} />
           <Route path="/form/:id" element={<QRCodeForm />} />
         </Routes>
       </div>

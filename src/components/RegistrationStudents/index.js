@@ -7,9 +7,9 @@ import "./index.css";
 
 const RegistrationStudents = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
   const [formSubmissions, setFormSubmissions] = useState([]);
   const [deleteSubmissionId, setDeleteSubmissionId] = useState(null);
+  const [loading, setLoading] = useState(true); // State for loading indicator
 
   useEffect(() => {
     fetchFormSubmissions();
@@ -21,6 +21,8 @@ const RegistrationStudents = () => {
       setFormSubmissions(response.data.result);
     } catch (error) {
       console.error('Error fetching form submissions:', error);
+    } finally {
+      setLoading(false); // Set loading to false once data fetching is complete
     }
   };
 
@@ -48,9 +50,13 @@ const RegistrationStudents = () => {
       <Sidebar/>
       <div className='students-top-content'>
         <h1 className='students-heading'>Students &gt; Registration</h1>
-        </div>
+      </div>
       <div className='students-group-details'>
-        {formSubmissions.length > 0 ? (
+        {loading ? ( // Show loader while loading
+          <div className="loader-container">
+            <div className="loader"></div>
+          </div>
+        ) : formSubmissions.length > 0 ? (
           <table className="group-table">
             <thead>
               <tr>
