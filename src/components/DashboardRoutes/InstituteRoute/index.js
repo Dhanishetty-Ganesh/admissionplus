@@ -34,16 +34,13 @@ const InstituteRoute = () => {
         }
       } catch (error) {
         console.error('Error fetching institutes:', error.message);
-        // Handle error state or display error to user
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, []);
-  
-  
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
