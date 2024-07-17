@@ -51,7 +51,7 @@ const Sidebar = ({ instituteName }) => {
           </div>
           {selectedOption === 'institute' && (
             <div className="dropdown-content">
-              <Link to={`/infoinstitute/${id}`} className='sidebar-options'>Info</Link>
+              <Link to={`/infoinstitute/${id}`} className='sidebar-options credits-dropdown'>Info</Link>
               <Link to={`/coursesinstitute/${id}`} className='sidebar-options'>Courses</Link>
             </div>
           )}
@@ -108,7 +108,7 @@ const Sidebar = ({ instituteName }) => {
           </div>
           {selectedOption === 'credits' && (
             <div className="dropdown-content">
-              <Link to={`/credits/${id}`} className='sidebar-options'>Plans</Link>
+              <Link to={`/credits/${id}`} className='sidebar-options credits-dropdown'>Plans</Link>
               <Link to={`/historycredits/${id}`} className='sidebar-options'>History</Link>
             </div>
           )}
