@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import './index.css';
 
 const QRCodeForm = () => {
@@ -19,6 +20,8 @@ const QRCodeForm = () => {
         const response = await axios.get(`https://admissionplusbackend.vercel.app/institutes/${id}`);
         if (response.data && response.data.result) {
           setInstitute(response.data.result);
+          // Store the institute ID in a cookie
+          Cookies.set('instituteId', response.data.result._id);
         }
       } catch (err) {
         console.error('Error fetching institute data:', err);
@@ -31,14 +34,22 @@ const QRCodeForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://admissionplusbackend.vercel.app/form', {
+      // Retrieve the institute ID from the cookie
+      const instituteId = Cookies.get('instituteId');
+
+      const studentData = {
         date,
         name,
         mobile,
         email,
         course,
+      };
+
+      const response = await axios.patch(`https://admissionplusbackend.vercel.app/institutes/${instituteId}`, {
+        $push: { studentregistrations: studentData }
       });
-      if (response.status === 201) {
+
+      if (response.status === 200) {
         setShowThankYouPopup(true);
         // Clear form fields after successful submission
         setDate('');
@@ -60,7 +71,7 @@ const QRCodeForm = () => {
   return (
     <div className="qrform-container">
       <div className="qr-institute-info">
-      <h1 className="qr-institute-name">{institute.name}</h1>
+        <h1 className="qr-institute-name">{institute.name}</h1>
         <img src={institute.logo || 'default-logo-url.jpg'} alt="institute-logo" className="qr-institute-logo" />
       </div>
       <h1 className="qrform-heading">Students Registration</h1>

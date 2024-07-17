@@ -92,12 +92,24 @@ const InstituteRoute = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('https://admissionplusbackend.vercel.app/institutes', formData);
+      const extendedFormData = {
+        ...formData,
+        studentregistrations: [],
+        studentdatabase: [],
+        studentdatabasegroupname: [],
+        audioclips: [],
+        marketing: [],
+        marketingdata: [],
+      };
+
+      const response = await axios.post('https://admissionplusbackend.vercel.app/institutes', extendedFormData);
+      
       if (response.data && response.data.result) {
         setBusinesses((prevBusinesses) => [...prevBusinesses, response.data.result]);
       } else {
         console.log("Unexpected response format:", response.data);
       }
+
       setIsFormVisible(false);
       setFormData({
         logo: '',
