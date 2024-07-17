@@ -27,64 +27,66 @@ const InstituteRoute = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://admissionplusbackend.vercel.app/institutes');
-        console.log("API Response:", response.data); // Log the entire response
-
-        if (response.data && Array.isArray(response.data.result)) {
+        if (response.status === 200) {
           setBusinesses(response.data.result);
-        } else if (response.data.failure) {
-          console.log("Error message from API:", response.data.failure);
         } else {
-          console.log("Unexpected response format:", response.data);
+          throw new Error(`Failed to fetch institutes: ${response.statusText}`);
         }
-      } catch (err) {
-        console.error('Error fetching data:', err);
+      } catch (error) {
+        console.error('Error fetching institutes:', error.message);
+        // Handle error state or display error to user
       } finally {
         setLoading(false);
       }
     };
+  
     fetchData();
   }, []);
+  
+  
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setFormData(prevData => ({
       ...prevData,
       [name]: value
     }));
   };
 
-  const getUrl = async (file) => {
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const imageUrl = await uploadFileToS3(file);
+        setFormData(prevData => ({
+          ...prevData,
+          logo: imageUrl
+        }));
+      } catch (error) {
+        console.error('Failed to upload file:', error.message);
+      }
+    }
+  };
+
+  const uploadFileToS3 = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
-  
+
     try {
       const response = await axios.post('https://admissionplusbackend.vercel.app/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-  
-      if (response.status !== 200) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-  
-      const data = response.data;
-      return data.data.Location; // Assuming the S3 URL is in data.Location
-    } catch (error) {
-      alert("File Upload Failed");
-      console.error('Error uploading file:', error.message);
-    }
-  };
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = await getUrl(file);
-      console.log(imageUrl);
-      setFormData((prev) => ({
-        ...prev,
-        logo: imageUrl
-      }));
+      if (response.status === 200) {
+        return response.data.data.Location; // Assuming the S3 URL is in data.Location
+      } else {
+        throw new Error(`Failed to upload file: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error.message);
+      throw error;
     }
   };
 
@@ -92,39 +94,27 @@ const InstituteRoute = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const extendedFormData = {
-        ...formData,
-        studentregistrations: [],
-        studentdatabase: [],
-        studentdatabasegroupname: [],
-        audioclips: [],
-        marketing: [],
-        marketingdata: [],
-      };
-
-      const response = await axios.post('https://admissionplusbackend.vercel.app/institutes', extendedFormData);
-      
-      if (response.data && response.data.result) {
-        setBusinesses((prevBusinesses) => [...prevBusinesses, response.data.result]);
+      const response = await axios.post('https://admissionplusbackend.vercel.app/institutes', formData);
+      if (response.status === 201) {
+        setBusinesses(prevBusinesses => [...prevBusinesses, response.data.result]);
+        setIsFormVisible(false);
+        setFormData({
+          logo: '',
+          name: '',
+          mobile: '',
+          role: '',
+          email: '',
+          location: '',
+          city: '',
+          district: '',
+          pincode: '',
+          coursesAvailable: '',
+        });
       } else {
-        console.log("Unexpected response format:", response.data);
+        throw new Error(`Failed to add institute: ${response.statusText}`);
       }
-
-      setIsFormVisible(false);
-      setFormData({
-        logo: '',
-        name: '',
-        mobile: '',
-        role: '',
-        email: '',
-        location: '',
-        city: '',
-        district: '',
-        pincode: '',
-        coursesAvailable: '',
-      });
-    } catch (err) {
-      console.error('Error submitting form:', err);
+    } catch (error) {
+      console.error('Error adding institute:', error.message);
     } finally {
       setLoading(false);
     }
@@ -156,11 +146,11 @@ const InstituteRoute = () => {
                   ) : (
                     <div className='business-logo-placeholder'>No Logo</div>
                   )}
-                  <div>
+                  <div className='business-detials-container-margin'>
                     <p className='business-name'>{business.name}</p>
                     <p className='business-mobile-no'>{business.mobile}</p>
                   </div>
-                  <div>
+                  <div className='business-detials-container-margin'>
                     <p className='business-role'>{business.role}</p>
                     <p className='business-email'>{business.email}</p>
                   </div>

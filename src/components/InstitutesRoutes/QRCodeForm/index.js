@@ -46,7 +46,7 @@ const QRCodeForm = () => {
       };
 
       const response = await axios.patch(`https://admissionplusbackend.vercel.app/institutes/${instituteId}`, {
-        $push: { studentregistrations: studentData }
+        studentregistrations: [...institute.studentregistrations, studentData]
       });
 
       if (response.status === 200) {

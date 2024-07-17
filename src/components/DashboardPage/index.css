@@ -11,7 +11,7 @@
 }
 
 .dashboard-top-section {
-    background-color: rgb(53, 85, 201);
+    background: linear-gradient(90deg, rgba(7,48,147,1) 40%, rgba(0,212,255,1) 100%);    
     display: flex;
     color: white;
     align-items: center;
@@ -39,7 +39,6 @@
     display: flex;
     height: 100vh;
     margin: 0;
-    padding: 0;
 }
 
 

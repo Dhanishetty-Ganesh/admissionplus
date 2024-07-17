@@ -7,19 +7,16 @@ import axios from 'axios';
 import Sidebar from '../Sidebar';
 import "./index.css";
 
-const StudentsDatabase = () => {
+const InstituteDatabase = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editGroupId, setEditGroupId] = useState(null);
-  const [groupData, setGroupData] = useState([]);
-  const [formData, setFormData] = useState({ groupName: '', category: '' });
+  const [editInstituteId, setEditInstituteId] = useState(null);
+  const [instituteData, setInstituteData] = useState([]);
+  const [formData, setFormData] = useState({ studentData: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [deleteGroupId, setDeleteGroupId] = useState(null);
-
-  // Define studentsCount if needed for future use
-  // const [studentsCount, setStudentsCount] = useState(0);
+  const [deleteInstituteId, setDeleteInstituteId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,81 +24,62 @@ const StudentsDatabase = () => {
         setLoading(true);
         setError(null);
 
-        const groupResponse = await axios.get('https://admissionplusbackend.vercel.app/groups');
-        const groups = groupResponse.data.result;
+        const instituteResponse = await axios.get('https://admissionplusbackend.vercel.app/institutes');
+        const institutes = instituteResponse.data.result;
 
-        const updatedGroups = await Promise.all(groups.map(async (group) => {
-          try {
-            const usersResponse = await axios.get('https://admissionplusbackend.vercel.app/studentsdbgroupname');
-            const totalUsers = usersResponse.data.result.length || 0; // Access the 'result' array in the response
-            console.log(usersResponse.data);
-            return { ...group, totalUsers };
-          } catch (error) {
-            console.error(`Error fetching total users for group ${group._id}:`, error);
-            return { ...group, totalUsers: 0 };
-          }
-        }));
-
-        setGroupData(updatedGroups);
-        // If needed for UI display
-        // setStudentsCount(updateStudentsCount(updatedGroups));
+        setInstituteData(institutes);
       } catch (error) {
-        console.error('Error loading groups:', error);
-        setError('Failed to load groups. Please try again.');
+        console.error('Error loading institutes:', error);
+        setError('Failed to load institutes. Please try again.');
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []); // Include fetchData in dependency array if needed
-
-  // Function to update students count if required
-  // const updateStudentsCount = (groups) => {
-  //   const totalCount = groups.reduce((acc, group) => acc + group.totalUsers, 0);
-  //   return totalCount;
-  // };
+  }, []);
 
   const handleAddClick = () => {
     setShowPopup(true);
     setIsEditing(false);
-    setFormData({ groupName: '', category: '' });
+    setFormData({ studentData: '' });
   };
 
   const handleCloseClick = () => {
     setShowPopup(false);
-    setFormData({ groupName: '', category: '' });
+    setFormData({ studentData: '' });
     setIsEditing(false);
-    setEditGroupId(null);
+    setEditInstituteId(null);
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    if (formData.groupName && formData.category) {
-      try {
-        if (isEditing) {
-          const response = await axios.put(`https://admissionplusbackend.vercel.app/groups/${editGroupId}`, formData);
-          const updatedGroup = response.data.result;
-          setGroupData(groupData.map(item => item._id === editGroupId ? updatedGroup : item));
-        } else {
-          const response = await axios.post('https://admissionplusbackend.vercel.app/groups', formData);
-          const newGroup = response.data.result;
-          setGroupData([...groupData, newGroup]);
-        }
-      } catch (error) {
-        console.error('Error saving group:', error);
-        setError('Failed to save group. Please try again.');
-      } finally {
-        setLoading(false);
-        handleCloseClick();
+
+    try {
+      if (isEditing && editInstituteId) {
+        // Add student data to an existing institute
+        const response = await axios.put(`https://admissionplusbackend.vercel.app/institutes/${editInstituteId}/students`, formData);
+        const updatedInstitute = response.data.result;
+        setInstituteData(instituteData.map(item => item._id === editInstituteId ? updatedInstitute : item));
+      } else {
+        // Create a new institute
+        const response = await axios.post('https://admissionplusbackend.vercel.app/institutes', formData);
+        const newInstitute = response.data.result;
+        setInstituteData([...instituteData, newInstitute]);
       }
+    } catch (error) {
+      console.error('Error saving institute:', error);
+      setError('Failed to save institute. Please try again.');
+    } finally {
+      setLoading(false);
+      handleCloseClick();
     }
   };
 
   const handleDelete = async (id) => {
-    setDeleteGroupId(id);
+    setDeleteInstituteId(id);
     setShowDeleteConfirmation(true);
   };
 
@@ -109,31 +87,30 @@ const StudentsDatabase = () => {
     setLoading(true);
     setError(null);
     try {
-      await axios.delete(`https://admissionplusbackend.vercel.app/groups/${deleteGroupId}`);
-      // If needed for UI update
-      // fetchData();
+      await axios.delete(`https://admissionplusbackend.vercel.app/institutes/${deleteInstituteId}`);
+      setInstituteData(instituteData.filter(item => item._id !== deleteInstituteId));
     } catch (error) {
-      console.error('Error deleting group:', error);
-      setError('Failed to delete group. Please try again.');
+      console.error('Error deleting institute:', error);
+      setError('Failed to delete institute. Please try again.');
     } finally {
       setLoading(false);
       setShowDeleteConfirmation(false);
-      setDeleteGroupId(null);
+      setDeleteInstituteId(null);
     }
   };
 
   const handleCancelDelete = () => {
     setShowDeleteConfirmation(false);
-    setDeleteGroupId(null);
+    setDeleteInstituteId(null);
   };
 
   const handleEditClick = (id) => {
-    const group = groupData.find(group => group._id === id);
-    if (group) {
-      setFormData({ groupName: group.groupName, category: group.category });
+    const institute = instituteData.find(institute => institute._id === id);
+    if (institute) {
+      setFormData({ studentData: '' }); // Reset the form data for editing student data
       setShowPopup(true);
       setIsEditing(true);
-      setEditGroupId(id);
+      setEditInstituteId(id);
     }
   };
 
@@ -146,7 +123,7 @@ const StudentsDatabase = () => {
     <div className='database-content'>
       <Sidebar />
       <div className='students-top-content'>
-        <h1 className='students-heading'>Students &gt; Database</h1>
+        <h1 className='students-heading'>Institute &gt; Database</h1>
         <div className='students-add-button-container'>
           <button className='students-add-button' onClick={handleAddClick}>
             Add <FaPlus className='student-plus' />
@@ -161,43 +138,42 @@ const StudentsDatabase = () => {
             <thead>
               <tr>
                 <th className="group-header">S.No</th>
-                <th className="group-header students-database-link">Group Name</th>
+                <th className="group-header students-database-link">Institute Name</th>
                 <th className="group-header">Total Users</th>
                 <th className="group-header">Course Category</th>
                 <th className="group-header">Action</th>
               </tr>
             </thead>
             <tbody>
-  {groupData.map((item, index) => (
-    <tr key={item._id} className="group-row">
-      <td className="group-cell">{index + 1}</td>
-      <td className="group-cell">
-        <Link to={`/studentsdatabase/${item._id}`}>
-          {item.groupName}
-        </Link>
-      </td>
-      <td className="group-cell">{item.totalUsers}</td>
-      <td className="group-cell">{item.category}</td>
-      <td className="group-cell">
-        <CiEdit
-          className="group-icon group-icon-edit"
-          onClick={() => handleEditClick(item._id)}
-        />
-        <MdDeleteOutline
-          className="group-icon group-icon-delete"
-          onClick={() => handleDelete(item._id)}
-        />
-      </td>
-    </tr>
-  ))}
-</tbody>
-
+              {instituteData.map((item, index) => (
+                <tr key={item._id} className="group-row">
+                  <td className="group-cell">{index + 1}</td>
+                  <td className="group-cell">
+                    <Link to={`/institute/${item._id}`}>
+                      {item.instituteName}
+                    </Link>
+                  </td>
+                  <td className="group-cell">{item.studentdatabase ? item.studentdatabase.length : 0}</td>
+                  <td className="group-cell">{item.category}</td>
+                  <td className="group-cell">
+                    <CiEdit
+                      className="group-icon group-icon-edit"
+                      onClick={() => handleEditClick(item._id)}
+                    />
+                    <MdDeleteOutline
+                      className="group-icon group-icon-delete"
+                      onClick={() => handleDelete(item._id)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         )}
 
         {showDeleteConfirmation && (
           <div className="delete-confirmation-popup">
-            <p className="delete-confirmation-text">Are you sure you want to delete this group?</p>
+            <p className="delete-confirmation-text">Are you sure you want to delete this institute?</p>
             <div className="delete-confirmation-buttons">
               <button className="delete-confirmation-button delete-confirmation-button-no" onClick={handleCancelDelete}>No</button>
               <button className="delete-confirmation-button" onClick={handleConfirmDelete}>Yes</button>
@@ -211,28 +187,16 @@ const StudentsDatabase = () => {
               <button className='group-close-button' onClick={handleCloseClick}>
                 <FaTimes />
               </button>
-              <h2>{isEditing ? 'Edit Group' : 'Add Group'}</h2>
+              <h2>{isEditing ? 'Edit Institute' : 'Add Institute'}</h2>
               <form onSubmit={handleFormSubmit} className='group-popup-form'>
                 <label className='group-label'>
-                  Group Name:
+                  Student Data:
                   <input
                     type='text'
-                    name='groupName'
-                    value={formData.groupName}
+                    name='studentData'
+                    value={formData.studentData}
                     onChange={handleInputChange}
-                    placeholder='Enter group name'
-                    className='group-input'
-                    required
-                  />
-                </label>
-                <label className='group-label'>
-                  Course Category:
-                  <input
-                    type='text'
-                    name='category'
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    placeholder='Enter Course category'
+                    placeholder='Enter student data'
                     className='group-input'
                     required
                   />
@@ -249,4 +213,4 @@ const StudentsDatabase = () => {
   );
 };
 
-export default StudentsDatabase;
+export default InstituteDatabase;

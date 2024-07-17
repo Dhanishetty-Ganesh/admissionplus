@@ -37,7 +37,6 @@
   margin-bottom: 10px;
   align-items: center;
   display: flex;
-  justify-content: space-around;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
   font-weight: 600;
@@ -46,12 +45,20 @@
 .location-logo {
   padding-right: 4px;
   padding-top: 2px;
+  
 }
 .business-logo {
   width: 40px; /* Reduced size */
   height: 40px; /* Reduced size */
   border-radius: 50%; /* Border radius for circular image */
+  margin-right: 20px;
+  margin-left: 20px;
   object-fit: cover;
+}
+.business-detials-container-margin {
+  margin-left: 60px;
+  margin-right: 60px;
+  width: 100%;
 }
 
 .business-login-button {
@@ -61,7 +68,12 @@
   color: white;
   border-radius: 5px;
   text-decoration: none;
+  margin-left: 60px;
+  margin-right: 10px;
   cursor: pointer;
+}
+.business-location {
+  width: 100%;
 }
 
 .floating-button {

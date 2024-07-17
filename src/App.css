@@ -19,9 +19,9 @@
 .institute-top-section {
     width: 100%; /* Full width */
     display: flex;
+    background: linear-gradient(90deg, rgba(7,48,147,1) 28%, rgba(0,212,255,1) 100%);
     justify-content: space-between;
     align-items: center;
-    background-color: #0F4A8A;
     color: white;
     padding: 5px 20px; /* Padding for spacing */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow */
@@ -44,7 +44,7 @@
 .sidebar {
     width: 18vw; /* Fixed width */
     box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1); /* Box shadow */
-    background-color: white; /* Light background color */
+    background: linear-gradient(90deg, #e3ffe7 0%, #d9e7ffa9 100%);
     padding-top: 30px;
     overflow-y: auto; /* Enable vertical scrolling */
     position: fixed;  

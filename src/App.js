@@ -13,7 +13,7 @@ import InstituteContainer from './components/InstituteContainer';
 import MarketingDashboard from './components/DashboardRoutes/MarketingDashboard';
 import SaleDashboard from './components/DashboardRoutes/SaleDashboard';
 import HelpDashboard from './components/DashboardRoutes/HelpDashboard';
-import SettingsDashboard from './components/DashboardRoutes/SettingsDashboard';
+import SettingsRoute from './components/DashboardRoutes/SettingsRoute';
 import CoursesInstitute from './components/InstitutesRoutes/CoursesInstitute';
 import RegistrationStudents from './components/RegistrationStudents';
 import InstituteRoute from './components/DashboardRoutes/InstituteRoute'; // Corrected path
@@ -51,7 +51,7 @@ const AppContent = () => {
           <Route path="/marketingdashboard" element={<MarketingDashboard />} />
           <Route path="/saledashboard" element={<SaleDashboard />} />
           <Route path="/helpdashboard" element={<HelpDashboard />} />
-          <Route path="/settingsdashboard" element={<SettingsDashboard />} />
+          <Route path="/settingsdashboard" element={<SettingsRoute />} />
           <Route path="/infoinstitute/:id" element={<InfoInstitute />} />
           <Route path="/coursesinstitute/:id" element={<CoursesInstitute />} />
           <Route path="/registrationstudents/:id" element={<RegistrationStudents />} />

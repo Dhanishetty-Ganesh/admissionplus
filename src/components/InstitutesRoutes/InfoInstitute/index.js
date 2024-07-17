@@ -49,7 +49,7 @@ const InfoInstitute = () => {
   }
 
   if (!institute) {
-    return <p>Error: Institute not found</p>;
+    return <p>Loading please wait or Refresh the page</p>;
   }
 
   return (
