@@ -3,6 +3,7 @@ import axios from 'axios';
 import { FaPlus } from 'react-icons/fa';
 import { AiTwotoneEdit } from 'react-icons/ai';
 import Sidebar from '../Sidebar';
+import { useParams } from 'react-router-dom';
 import { MdDeleteOutline } from 'react-icons/md';
 import { IoClose } from "react-icons/io5";
 import './index.css';
@@ -10,10 +11,11 @@ import './index.css';
 const MarketingData = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [editId, setEditId] = useState(null);
+  const [currentEditId, setEditId] = useState(null);
   const [marketingItem, setMarketingItem] = useState([]);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const {id} = useParams();
   const [formData, setFormData] = useState({
     name: '',
     number: '',
@@ -28,7 +30,7 @@ const MarketingData = () => {
 
   const fetchMarketingItem = useCallback(async () => {
     try {
-      const response = await axios.get("https://admissionplusbackend.vercel.app/marketingdata");
+      const response = await axios.get(`https://admissionplusbackend.vercel.app/institutes/${id}/marketingdata`);
       setMarketingItem(response.data.result);
     } catch (err) {
       console.error(`Error fetching marketing item: ${err}`);
@@ -83,23 +85,27 @@ const MarketingData = () => {
       number: formData.number,
       group: formData.group || formData.libraryGroup // Prioritize group if provided, otherwise use libraryGroup
     };
+  
     try {
       if (isEditMode) {
-        await axios.put(`https://admissionplusbackend.vercel.app/marketingdata/${editId}`, newItem);
-        const updatedItems = marketingItem.map(item => (item._id === editId ? newItem : item));
+        await axios.put(`https://admissionplusbackend.vercel.app/institutes/${id}/marketingdata/${currentEditId}`, newItem);
+        const updatedItems = marketingItem.map(item => (item._id === currentEditId ? newItem : item));
         setMarketingItem(updatedItems);
       } else {
-        await axios.post('https://admissionplusbackend.vercel.app/marketingdata', newItem);
-        setMarketingItem([...marketingItem, newItem]);
+        const response = await axios.post('https://admissionplusbackend.vercel.app/institutes/${id}/marketingdata', newItem);
+        setMarketingItem([...marketingItem, response.data.result]); // Assuming your API returns the new item with an ID
       }
     } catch (err) {
       console.error(`Error ${isEditMode ? 'updating' : 'adding'} marketing item: ${err}`);
     }
+  
+    // Reset form fields and state
     setFormData({ name: '', number: '', group: '', libraryGroup: '' });
     setIsPopupOpen(false);
     setIsEditMode(false);
     setEditId(null);
   };
+  
 
   const handleEdit = (item) => {
     setFormData({
@@ -140,17 +146,18 @@ const MarketingData = () => {
     const clip = voiceClips.find(clip => clip._id === selectedClipId);
     setSelectedVoiceClip(clip);
   };
+
   const handleAddGroup = () => {
     const newGroupEntry = {
       name: formData.name,
       number: formData.number,
       group: formData.libraryGroup
     };
-  
+
     // Perform validation or checks as needed before adding
     if (formData.name && formData.number && formData.libraryGroup) {
       setGroupEntries([...groupEntries, newGroupEntry]);
-  
+
       // Clear the form fields after adding
       setFormData({ name: '', number: '', group: '', libraryGroup: '' });
     } else {
@@ -158,8 +165,6 @@ const MarketingData = () => {
       // Optionally, you can display an error message or handle validation differently
     }
   };
-  
-  
 
   useEffect(() => {
     if (audioRef.current) {

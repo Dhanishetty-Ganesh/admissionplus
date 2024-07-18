@@ -3,12 +3,13 @@ import './index.css';
 import { FaPlus } from 'react-icons/fa';
 import { AiTwotoneEdit } from 'react-icons/ai';
 import { MdDeleteOutline } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Sidebar from '../Sidebar';
 
 const Marketing = () => {
   const [data, setData] = useState([]);
+  const { id } = useParams(); // Assuming you have an ID parameter from the route
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentEditId, setCurrentEditId] = useState(null);
@@ -18,14 +19,16 @@ const Marketing = () => {
   const [headersVisible, setHeadersVisible] = useState(false); // State for showing headers
   const [isLoading, setIsLoading] = useState(true); // State for loading indicator
 
+  console.log(id);
+
   useEffect(() => {
     fetchMarketingCampaigns();
   }, []);
 
   const fetchMarketingCampaigns = async () => {
     try {
-      const response = await axios.get('https://admissionplusbackend.vercel.app/marketing');
-      setData(response.data.result);
+      const response = await axios.get(`https://admissionplusbackend.vercel.app/institutes/${id}/marketing`);
+      setData(response.data);
       setIsLoading(false); // Set isLoading to false after data is fetched
       setHeadersVisible(true); // Show headers after data is fetched
     } catch (error) {
@@ -65,17 +68,12 @@ const Marketing = () => {
 
       let response;
       if (isEditMode) {
-        response = await axios.put(`https://admissionplusbackend.vercel.app/marketing/${currentEditId}`, dataToSubmit);
+        response = await axios.put(`https://admissionplusbackend.vercel.app/institutes/${id}/marketing/${currentEditId}`, dataToSubmit);
         const updatedData = data.map(item => item._id === currentEditId ? { ...item, name: dataToSubmit.name, category: dataToSubmit.category } : item);
         setData(updatedData);
       } else {
-        response = await axios.post('https://admissionplusbackend.vercel.app/marketing', dataToSubmit);
-        setData([...data, response.data.result]);
-      }
-
-      // Set the dataToSubmit.dateTime to the response's dateTime value if available
-      if (response.data.result.dateTime) {
-        dataToSubmit.dateTime = response.data.result.dateTime;
+        response = await axios.post(`https://admissionplusbackend.vercel.app/institutes/${id}/marketing`, dataToSubmit);
+        setData([...data, response.data.newData]);
       }
 
       togglePopup();
@@ -94,7 +92,7 @@ const Marketing = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`https://admissionplusbackend.vercel.app/marketing/${deleteId}`);
+      await axios.delete(`https://admissionplusbackend.vercel.app/institutes/${id}/marketing/${deleteId}`);
       setData(data.filter(item => item._id !== deleteId));
       toggleDeletePopup();
     } catch (error) {
@@ -189,7 +187,7 @@ const Marketing = () => {
                     <td className='marketing-main-td'>{index + 1}</td>
                     <td className='marketing-main-td'>{new Date(item.dateTime).toLocaleString()}</td>
                     <td className='marketing-main-td marketing-linked-item'>
-                    <Link to={`/marketing/${item._id}/${encodeURIComponent(item.name)}`} className='marketing-link-element'>{item.name}</Link>
+                      <Link to={`/marketing/${item._id}/${encodeURIComponent(item.name)}`} className='marketing-link-element'>{item.name}</Link>
                     </td>
                     <td className='marketing-main-td'>{item.category}</td>
                     <td className='marketing-main-td'>

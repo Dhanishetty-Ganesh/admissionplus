@@ -1,10 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { FaPlus } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import axios from 'axios';
 import DashboardPage from '../../DashboardPage';
 import './index.css';
+
+const InstituteItem = memo(({ business }) => (
+  <li className='business-list-item'>
+    {business.logo ? (
+      <img src={business.logo} alt="logo" className='business-logo'/>
+    ) : (
+      <div className='business-logo-placeholder'>No Logo</div>
+    )}
+    <div className='business-detials-container-margin'>
+      <p className='business-name'>{business.name}</p>
+      <p className='business-mobile-no'>{business.mobile}</p>
+    </div>
+    <div className='business-detials-container-margin'>
+      <p className='business-role'>{business.role}</p>
+      <p className='business-email'>{business.email}</p>
+    </div>
+    <p className='business-location'><MdLocationOn className='location-logo' />{business.location}</p>
+    <Link className='business-login-button' to={`/institutecontainer/${business._id}`}>Login</Link>
+  </li>
+));
 
 const InstituteRoute = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -23,24 +43,24 @@ const InstituteRoute = () => {
     coursesAvailable: '',
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('https://admissionplusbackend.vercel.app/institutes');
-        if (response.status === 200) {
-          setBusinesses(response.data.result);
-        } else {
-          throw new Error(`Failed to fetch institutes: ${response.statusText}`);
-        }
-      } catch (error) {
-        console.error('Error fetching institutes:', error.message);
-      } finally {
-        setLoading(false);
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await axios.get('https://admissionplusbackend.vercel.app/institutes');
+      if (response.status === 200) {
+        setBusinesses(response.data.result);
+      } else {
+        throw new Error(`Failed to fetch institutes: ${response.statusText}`);
       }
-    };
-
-    fetchData();
+    } catch (error) {
+      console.error('Error fetching institutes:', error.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -91,27 +111,40 @@ const InstituteRoute = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('https://admissionplusbackend.vercel.app/institutes', formData);
-      if (response.status === 201) {
-        setBusinesses(prevBusinesses => [...prevBusinesses, response.data.result]);
-        setIsFormVisible(false);
-        setFormData({
-          logo: '',
-          name: '',
-          mobile: '',
-          role: '',
-          email: '',
-          location: '',
-          city: '',
-          district: '',
-          pincode: '',
-          coursesAvailable: '',
-        });
+      const extendedFormData = {
+        ...formData,
+        studentregistrations: [],
+        studentdatabase: [],
+        studentdatabasegroupname: [],
+        audioclips: [],
+        marketing: [],
+        marketingdata: [],
+      };
+
+      const response = await axios.post('https://admissionplusbackend.vercel.app/institutes', extendedFormData);
+      
+      if (response.data && response.data.result) {
+        setBusinesses((prevBusinesses) => [...prevBusinesses, response.data.result]);
       } else {
-        throw new Error(`Failed to add institute: ${response.statusText}`);
+        console.log("Unexpected response format:", response.data);
       }
-    } catch (error) {
-      console.error('Error adding institute:', error.message);
+
+      setIsFormVisible(false);
+      setFormData({
+        logo: '',
+        name: '',
+        mobile: '',
+        role: '',
+        email: '',
+        location: '',
+        city: '',
+        district: '',
+        pincode: '',
+        coursesAvailable: '',
+      });
+    } catch (err) {
+      console.error('Error submitting form:', err);
+      // Handle error state or display error to user
     } finally {
       setLoading(false);
     }
@@ -137,23 +170,7 @@ const InstituteRoute = () => {
           ) : (
             <ul className='business-list-items-container'>
               {businesses.map((business, index) => (
-                <li className='business-list-item' key={index}>
-                  {business.logo ? (
-                    <img src={business.logo} alt="logo" className='business-logo'/>
-                  ) : (
-                    <div className='business-logo-placeholder'>No Logo</div>
-                  )}
-                  <div className='business-detials-container-margin'>
-                    <p className='business-name'>{business.name}</p>
-                    <p className='business-mobile-no'>{business.mobile}</p>
-                  </div>
-                  <div className='business-detials-container-margin'>
-                    <p className='business-role'>{business.role}</p>
-                    <p className='business-email'>{business.email}</p>
-                  </div>
-                  <p className='business-location'><MdLocationOn className='location-logo' />{business.location}</p>
-                  <Link className='business-login-button' to={`/institutecontainer/${business._id}`}>Login</Link>
-                </li>
+                <InstituteItem key={index} business={business} />
               ))}
             </ul>
           )
